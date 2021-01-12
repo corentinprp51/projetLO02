@@ -466,7 +466,7 @@ public class MonInterface implements Observer {
 
 		BufferedImage img = null;
 		try {
-		    img = ImageIO.read(new File("C:\\\\Users\\\\Coco\\\\eclipse-workspace\\\\projetLO02\\\\src\\\\fr\\\\corentinPierre\\\\views\\\\" + name + ".jpg"));
+			img = ImageIO.read(this.getClass().getResource(name + ".jpg"));
 		} catch (IOException e) {
 		    e.printStackTrace();
 		}

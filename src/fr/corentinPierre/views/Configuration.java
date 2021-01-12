@@ -14,9 +14,13 @@ import fr.corentinPierre.models.Partie;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JComboBox;
+import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.GridLayout;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -45,6 +49,7 @@ public class Configuration extends JPanel implements Observer {
 	JCheckBox virtuel3;
 	ArrayList<JCheckBox> checkboxes;
 	ArrayList<JTextField> inputs;
+	JLabel wIcon;
 
 	/**
 	 * Create the panel.
@@ -149,9 +154,18 @@ public class Configuration extends JPanel implements Observer {
 		this.add(panel_1);
 		panel_1.setLayout(new GridLayout(0, 1, 0, 0));
 		
-		JButton btnNewButton_1 = new JButton("");
-		btnNewButton_1.setEnabled(false);
-		panel_1.add(btnNewButton_1);
+		wIcon = new JLabel("");
+		wIcon.setBounds(389, 83, 381, 309);
+		panel_1.add(wIcon);
+		
+		BufferedImage wPic;
+		try {
+			wPic = ImageIO.read(this.getClass().getResource("logo.PNG"));
+			wIcon.setIcon(new ImageIcon(wPic));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 		//Contrôleur
@@ -195,5 +209,4 @@ public class Configuration extends JPanel implements Observer {
 		}
 		
 	}
-	
 }
