@@ -1,6 +1,7 @@
 package fr.corentinPierre.models;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
@@ -8,7 +9,7 @@ import java.util.TreeMap;
 
 import fr.corentinPierre.enums.FormePlateau;
 
-public class Plateau {
+public class Plateau implements Serializable {
 	
 	private FormePlateau formePlateau;
 	private int x;

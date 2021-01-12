@@ -1,5 +1,12 @@
 package fr.corentinPierre.models;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -12,7 +19,7 @@ import java.util.TreeMap;
 import fr.corentinPierre.enums.Couleur;
 import fr.corentinPierre.enums.Forme;
 
-public class Partie extends Observable {
+public class Partie extends Observable implements Serializable {
 
 	protected int round;
 	protected LinkedList<Carte> deck;
@@ -24,6 +31,7 @@ public class Partie extends Observable {
 	protected Carte carteADeplacer;
 	protected boolean alreadyDeplacee;
 	protected Variante regle;
+	protected boolean loaded = false;
 	
 	public Partie(Plateau plateau) {
 		this.round = 0;
@@ -42,6 +50,10 @@ public class Partie extends Observable {
 	
 	public int getRound() {
 		return this.round;
+	}
+	
+	public boolean getLoaded() {
+		return this.loaded;
 	}
 	
 	/**
@@ -486,4 +498,49 @@ public class Partie extends Observable {
 		return score;
 	}
 	
+	public static void savePartie(Partie p, String fileName) {
+		try {
+			FileOutputStream fos = new FileOutputStream(fileName);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(p);
+			fos.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	public void setLoaded(boolean l) {
+		this.loaded = l;
+	}
+	
+	public static Partie loadPartie(String fileName) {
+		Partie p = new Partie(new Plateau());
+		try {
+			FileInputStream fis = new FileInputStream(fileName);
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			p = (Partie) ois.readObject();
+			p.setLoaded(true);
+			fis.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Pas de dernière sauvegarde de parties");
+			//e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Pas de dernière sauvegarde de parties");
+			//e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Pas de dernière sauvegarde de parties");
+			//e.printStackTrace();
+		}
+		return p;
+		
+	}
 }

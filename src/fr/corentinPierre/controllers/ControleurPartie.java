@@ -91,7 +91,7 @@ public class ControleurPartie {
 						if(!isDeplacee) {
 							partie.setEtat("carteADeplacer" + btn.getXGrille() + btn.getYGrille());
 						}
-					}else {
+					} else {
 						partie.setEtat("impossiblePoser");
 					}
 				}

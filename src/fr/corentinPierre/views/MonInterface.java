@@ -6,6 +6,8 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -63,8 +65,8 @@ public class MonInterface implements Observer {
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
-			Plateau p = new Plateau();
-			Partie partie = new Partie(p);
+			//Plateau p = new Plateau();
+			Partie partie = Partie.loadPartie("src/save.ser");
 			public void run() {
 				try {
 					MonInterface window = new MonInterface(partie);
@@ -85,6 +87,8 @@ public class MonInterface implements Observer {
 		this.grille = new ArrayList<>();
 		this.scores = new ArrayList<>();
 		initialize();
+		partie.addObserver(this);
+		partie.setEtat(partie.getEtat());
 		ControleurPartie cp = new ControleurPartie(partie);
 		cp.startEvent(buttonStart);
 		cp.finTour(buttonFinTour);
@@ -92,8 +96,6 @@ public class MonInterface implements Observer {
 		cp.askDeplacer(buttonDeplacer);
 		
 		cp.poserCarte(grille);
-		
-		partie.addObserver(this);
 	}
 
 	/**
@@ -104,6 +106,18 @@ public class MonInterface implements Observer {
 		frame.setBounds(100, 100, 796, 442);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
+		frame.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent windowEvent) {
+				if(partie.getEtat() == "finTour") {
+					Partie.savePartie(partie, "src/save.ser");
+				} else {
+					File file = new File("src/save.ser");
+					if(file != null) {
+						file.delete();
+					}
+				}
+			}
+		});
 		
 		this.configurationPanel = new Configuration(new fr.corentinPierre.models.Configuration(), partie);
 		frame.getContentPane().add(this.configurationPanel);
@@ -335,14 +349,11 @@ public class MonInterface implements Observer {
 				this.labelDeck.setText("Deck: " + (((Partie)o).getDeck().size()));
 				this.labelTour.setText("Tour: " + (((Partie)o).getRound() + 1));
 				if(this.isJoueurVirtuel()) {
-					System.out.println("AAAA");
 					JoueurVirtuel jv = this.getJoueurVirtuel();
 					int[] coords = jv.choisirEmplacement();
 					System.out.println("Coordonnées random: " + coords[0] + ", " + coords[1]);
 					buttonPoser.doClick();
 					this.findButton(coords[0], coords[1]).doClick();
-				} else {
-					System.out.println("bbb");
 				}
 				break;
 			} 
@@ -366,21 +377,29 @@ public class MonInterface implements Observer {
 				break;
 			}
 			case "finTour": {
+				if(partie.getLoaded()) {
+					frame.getContentPane().remove(configurationPanel);
+					frame.getContentPane().add(panel);
+					frame.getContentPane().add(panel_1);
+					//buttonPoser.setEnabled(true);
+					this.setGrilleEnabled(true);
+					this.retablirGrille();
+				}
 				labelInfos.setText("");
 				buttonPoser.setEnabled(true);
 				if(partie.getRound() > 1) {
 					buttonDeplacer.setEnabled(true);
 				}
 				buttonFinTour.setEnabled(false);
-				int idJoueur = ((Partie) o).getRound()%((Partie)o).getJoueurs().size();
-				this.labelTour.setText("Tour: " + (((Partie) o).getRound() + 1));
-				this.labelJoueur.setText(((Partie) o).getJoueurs().get(idJoueur).getNom());
-				//Affichage carte victoire
-				ImageIcon img = this.resizeImage(((Partie) o).getJoueurs().get(idJoueur).getCarteVictoire().getImageName(), 100, 100);
-				buttonCarteVictoire.setIcon(img);
-				ImageIcon imgPosee = this.resizeImage(((Partie) o).getCartePiochee().getImageName(), 100, 100);
-				buttonCartePiochee.setIcon(imgPosee);
-				this.labelDeck.setText("Deck: " + (((Partie)o).getDeck().size()));
+					int idJoueur = ((Partie) o).getRound()%((Partie)o).getJoueurs().size();
+					this.labelTour.setText("Tour: " + (((Partie) o).getRound() + 1));
+					this.labelJoueur.setText(((Partie) o).getJoueurs().get(idJoueur).getNom());
+					//Affichage carte victoire
+					ImageIcon img = this.resizeImage(((Partie) o).getJoueurs().get(idJoueur).getCarteVictoire().getImageName(), 100, 100);
+					buttonCarteVictoire.setIcon(img);
+					ImageIcon imgPosee = this.resizeImage(((Partie) o).getCartePiochee().getImageName(), 100, 100);
+					buttonCartePiochee.setIcon(imgPosee);
+					this.labelDeck.setText("Deck: " + (((Partie)o).getDeck().size()));
 				if(this.isJoueurVirtuel()) {
 					buttonPoser.doClick();
 				}
@@ -504,5 +523,14 @@ public class MonInterface implements Observer {
 	}
 	private JoueurVirtuel getJoueurVirtuel() {
 		return (JoueurVirtuel) partie.getJoueurs().get(partie.getRound() % partie.getJoueurs().size());
+	}
+	
+	private void retablirGrille() {
+		for(Map.Entry<Integer, Map<Integer, Carte>> entry: partie.getPlateau().getCartesPosees().entrySet() ) {
+			for(Map.Entry<Integer, Carte> entry2: entry.getValue().entrySet()) {
+				
+				this.findButton(entry2.getKey(), entry.getKey()).setIcon(this.resizeImage(entry2.getValue().getImageName(), 100, 100));
+			}
+		}
 	}
 }

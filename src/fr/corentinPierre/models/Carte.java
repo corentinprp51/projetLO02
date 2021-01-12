@@ -1,5 +1,7 @@
 package fr.corentinPierre.models;
 
+import java.io.Serializable;
+
 import fr.corentinPierre.enums.Couleur;
 import fr.corentinPierre.enums.Forme;
 
@@ -9,7 +11,7 @@ import fr.corentinPierre.enums.Forme;
  * @author Pierre
  *
  */
-public class Carte {
+public class Carte implements Serializable{
 	
 	private Forme forme;
 	private Couleur couleur;

@@ -1,6 +1,8 @@
 package fr.corentinPierre.models;
 
-public abstract class Variante {
+import java.io.Serializable;
+
+public abstract class Variante implements Serializable{
 	protected String nom;
 	protected Partie partie;
 	public Variante(String nom, Partie p) {

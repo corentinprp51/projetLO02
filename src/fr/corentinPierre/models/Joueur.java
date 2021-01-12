@@ -1,6 +1,8 @@
 package fr.corentinPierre.models;
 
-public abstract class Joueur {
+import java.io.Serializable;
+
+public abstract class Joueur implements Serializable{
 	
 	protected int id;
 	protected String nom;

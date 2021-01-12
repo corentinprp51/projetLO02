@@ -1,8 +1,9 @@
 package fr.corentinPierre.models;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class PlayEasy implements ModeJeuStrategy{
+public class PlayEasy implements ModeJeuStrategy, Serializable{
 
 	public int[] placement() {
 		Random rX = new Random();
