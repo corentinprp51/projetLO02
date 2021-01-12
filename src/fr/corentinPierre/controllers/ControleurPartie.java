@@ -81,7 +81,7 @@ public class ControleurPartie {
 					} else if(partie.getEtat() == "attenteDeplacer" || partie.getEtat() == "erreurChoixDeplacer") {
 						//Choix d'une carte à déplacer
 						Carte c = partie.prendreCarteADeplacer(btn.getXGrille(), btn.getYGrille());
-						btn.setIcon(null);
+						//btn.setIcon(null);
 						if(c == null) {
 							partie.setEtat("erreurChoixDeplacer");
 						}
@@ -89,7 +89,7 @@ public class ControleurPartie {
 						Carte c = partie.getCarteADeplacer();
 						boolean isDeplacee = partie.deplacerCarte(c, btn.getXGrille(), btn.getYGrille());
 						if(!isDeplacee) {
-							partie.setEtat("carteADeplacer");
+							partie.setEtat("carteADeplacer" + btn.getXGrille() + btn.getYGrille());
 						}
 					}else {
 						partie.setEtat("impossiblePoser");

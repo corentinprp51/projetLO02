@@ -149,6 +149,7 @@ public class VueText implements Observer, Runnable{
 		if(o instanceof Partie) {
 			switch (((Partie) o).getEtat()) {
 			case "initialisation" : {
+				
 				System.out.println(o);
 				System.out.println();
 				System.out.println("Tour(s): " + ((Partie)o).getRound());

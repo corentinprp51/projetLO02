@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Optional;
@@ -333,7 +334,16 @@ public class MonInterface implements Observer {
 				buttonCartePiochee.setIcon(imgPosee);
 				this.labelDeck.setText("Deck: " + (((Partie)o).getDeck().size()));
 				this.labelTour.setText("Tour: " + (((Partie)o).getRound() + 1));
-				//C:\\Users\\Coco\\eclipse-workspace\\projetLO02\\src\\fr\\corentinPierre\\views\\CBR.jpg
+				if(this.isJoueurVirtuel()) {
+					System.out.println("AAAA");
+					JoueurVirtuel jv = this.getJoueurVirtuel();
+					int[] coords = jv.choisirEmplacement();
+					System.out.println("Coordonnées random: " + coords[0] + ", " + coords[1]);
+					buttonPoser.doClick();
+					this.findButton(coords[0], coords[1]).doClick();
+				} else {
+					System.out.println("bbb");
+				}
 				break;
 			} 
 			case "attentePoser": {
@@ -458,7 +468,13 @@ public class MonInterface implements Observer {
 					buttonPoser.setEnabled(true);
 				}
 				buttonDeplacer.setEnabled(false);
-			} 
+			} else if (((Partie) o).getEtat().indexOf("carteADeplacer") != -1) {
+				//Supprimer l'image correspondant à la carte choisie
+				int x, y;
+				x = Character.getNumericValue(((Partie) o).getEtat().charAt(((Partie) o).getEtat().length() - 2));
+				y = Character.getNumericValue(((Partie) o).getEtat().charAt(((Partie) o).getEtat().length() - 1));
+				this.findButton(x, y).setIcon(null);
+			}
 			
 		}
 	}
@@ -484,7 +500,7 @@ public class MonInterface implements Observer {
 	}
 	
 	private boolean isJoueurVirtuel() {
-		return partie.getRound() != 0 && partie.getJoueurs().get(partie.getRound() % partie.getJoueurs().size()) instanceof JoueurVirtuel;
+		return partie.getJoueurs().get(partie.getRound() % partie.getJoueurs().size()) instanceof JoueurVirtuel;
 	}
 	private JoueurVirtuel getJoueurVirtuel() {
 		return (JoueurVirtuel) partie.getJoueurs().get(partie.getRound() % partie.getJoueurs().size());
