@@ -19,6 +19,11 @@ public abstract class Variante implements Serializable{
 	}
 	
 	abstract public void initialisation();
+
+	public abstract void setCarteAPoser(Carte c);
+	abstract public Carte getCarteAPoser();
+	abstract public Carte piocher();
+	
 	
 
 }

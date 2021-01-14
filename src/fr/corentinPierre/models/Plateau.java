@@ -26,6 +26,20 @@ public class Plateau implements Serializable {
 		return this.cartesPosees;
 	}
 	
+	public int getNbCartesPosees() {
+		int count = 0;
+		for(Map.Entry<Integer, Map<Integer, Carte>> entry: this.getCartesPosees().entrySet() ) {
+			for(Map.Entry<Integer, Carte> entry2: entry.getValue().entrySet()) {
+				count++;
+			}
+		}
+		return count;
+	}
+	
+	public boolean isFull() {
+		return this.getNbCartesPosees() == 15;
+	}
+	
 	public boolean checkAdjacence(int x, int y) {
 		if(this.cartesPosees.containsKey(y+1)) {
 			if(this.cartesPosees.get(y+1).containsKey(x)) {

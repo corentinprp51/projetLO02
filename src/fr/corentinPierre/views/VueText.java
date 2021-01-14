@@ -7,10 +7,14 @@ import java.util.Observable;
 import java.util.Observer;
 
 import fr.corentinPierre.models.Carte;
+import fr.corentinPierre.models.Configuration;
 import fr.corentinPierre.models.JoueurHumain;
 import fr.corentinPierre.models.JoueurVirtuel;
 import fr.corentinPierre.models.JoueurVirtuelDebutant;
 import fr.corentinPierre.models.Partie;
+import fr.corentinPierre.models.Variante1;
+import fr.corentinPierre.models.Variante2;
+import fr.corentinPierre.models.Variante3;
 /**
  * Classe VueText
  * TEST COMMIT OHO
@@ -21,7 +25,7 @@ import fr.corentinPierre.models.Partie;
 @SuppressWarnings("deprecation")
 public class VueText implements Observer, Runnable{
 	public static String PROMPT = "> ";
-	public static String START = "S";
+	public static String START = "C";
 	public static String POSER = "P";
 	public static String DEPLACER = "D";
 	public static String FINTOUR = "F";
@@ -46,29 +50,69 @@ public class VueText implements Observer, Runnable{
 		do{
 			System.out.println(this.messageConsole());
 			saisie = this.lireChaine();
-			if (saisie.equalsIgnoreCase("S") && partie.getEtat() == "") {
-				JoueurHumain p1 = new JoueurHumain(0, "Corentin");
-				JoueurHumain p2 = new JoueurHumain(1, "Pierre");
-				JoueurHumain p3 = new JoueurHumain(2, "Dorian");
-				JoueurVirtuel v1 = new JoueurVirtuelDebutant(0, "Virtuel 1");
-				JoueurVirtuel v2 = new JoueurVirtuelDebutant(1, "Virtuel 2");
-				JoueurVirtuel v3 = new JoueurVirtuelDebutant(2, "Virtuel 3");
-				partie.ajouterJoueur(p1);
-				partie.ajouterJoueur(p2);
-				partie.ajouterJoueur(p3);
+			if (saisie.equalsIgnoreCase("C") && partie.getEtat() == "") {
+				//Demander les différentes saisie
+				fr.corentinPierre.models.Configuration config = new Configuration();
+				System.out.println("Mode de jeu de la partie (N : Normal, A : Avancé, R: refill");
+				String modeJeu = this.lireChaine();
+				config.setTypePartie(modeJeu);
+				System.out.println("Nombre de joueurs de la partie (2 ou 3)");
+				int nbJoueurs = Integer.parseInt(this.lireChaine());
+				config.setNombreJoueursAttendu(nbJoueurs);
+				for(int i = 0; i < nbJoueurs; i++) {
+					System.out.println("Joueur Virtuel ? (O / N)");
+					String virtuel = this.lireChaine();
+					boolean isVirtuel = virtuel.equalsIgnoreCase("O") ? true : false;
+					String nomJ = "";
+					if(!isVirtuel) {
+						System.out.println("Saisir nom joueur " + i+1);
+						nomJ = this.lireChaine();
+					}
+					config.addJoueur(isVirtuel ? new JoueurVirtuelDebutant(i, "Joueur 0" + i+1) : new JoueurHumain(i, nomJ));
+				}
+				//Start de la partie 
+				config.getJoueurs().forEach(joueur -> {
+					partie.ajouterJoueur(joueur);
+				});
+				switch (config.getTypePartie()) {
+				case "N": {
+					Variante1 v = new Variante1("Normal", partie);
+					partie.setVariante(v);
+					break;
+				}
+				case "A": {
+					Variante2 v = new Variante2("Avance", partie);
+					partie.setVariante(v);
+				}
+				case "R": {
+					System.out.println("Refill");
+					Variante1 v = new Variante1("Refill", partie);
+					partie.setVariante(v);
+				}
+				default:
+					//throw new IllegalArgumentException("Unexpected value: " + config.getTypePartie());
+				}
 				partie.initialisation();
 			} else if (partie.getRound() == 0 && (partie.getEtat() == "initialisation" || partie.getEtat() == "attentePoser" || partie.getEtat() == "erreurPoser")) {
 				if(saisie.equalsIgnoreCase(VueText.POSER)) {
 					partie.setEtat("attentePoser");
 				}
 				if(partie.getEtat() == "attentePoser" || partie.getEtat() == "erreurPoser") {
-					System.out.println("Saisissez coordonnée x: ");
-					int x = Integer.parseInt(this.lireChaine());
-					System.out.println("Saisissez coordonnée y: ");
-					int y = Integer.parseInt(this.lireChaine());
-					boolean isPosee = partie.poserCarte(x, y);
-					if(isPosee == false) {
-						partie.setEtat("erreurPoser");
+					if(partie.getVariante().getNom().equalsIgnoreCase("Avance")) {
+						System.out.println("Saisissez la carte à poser (entre 0 et 2 inclus)");
+						int x = Integer.parseInt(this.lireChaine());
+						Carte c = partie.getJoueurs().get(partie.getRound() % partie.getJoueurs().size()).removeCarteFromMainByIndex(x);
+						partie.getVariante().setCarteAPoser(c);
+						partie.setEtat("carteAPoser" + x);
+					} else {
+						System.out.println("Saisissez coordonnée x: ");
+						int x = Integer.parseInt(this.lireChaine());
+						System.out.println("Saisissez coordonnée y: ");
+						int y = Integer.parseInt(this.lireChaine());
+						boolean isPosee = partie.poserCarte(x, y);
+						if(isPosee == false) {
+							partie.setEtat("erreurPoser");
+						}
 					}
 					
 				}
@@ -79,15 +123,23 @@ public class VueText implements Observer, Runnable{
 				//Déplacer une carte
 				partie.setEtat("attenteDeplacer");
 			} else if(partie.getEtat() == "attentePoser" || partie.getEtat() == "erreurPoser") {
-				System.out.println("Saisissez coordonnée x: ");
-				int x = Integer.parseInt(this.lireChaine());
-				System.out.println("Saisissez coordonnée y: ");
-				int y = Integer.parseInt(this.lireChaine());
-				boolean isPosee = partie.poserCarte(x, y);
-				if(isPosee == false) {
-					partie.setEtat("erreurPoser");
+				if(partie.getVariante().getNom().equalsIgnoreCase("Avance")) {
+					System.out.println("Saisissez la carte à poser (entre 0 et 2 inclus)");
+					int x = Integer.parseInt(this.lireChaine());
+					Carte c = partie.getJoueurs().get(partie.getRound() % partie.getJoueurs().size()).removeCarteFromMainByIndex(x);
+					partie.getVariante().setCarteAPoser(c);
+					partie.setEtat("carteAPoser" + x);
+				} else {
+					System.out.println("Saisissez coordonnée x: ");
+					int x = Integer.parseInt(this.lireChaine());
+					System.out.println("Saisissez coordonnée y: ");
+					int y = Integer.parseInt(this.lireChaine());
+					boolean isPosee = partie.poserCarte(x, y);
+					if(isPosee == false) {
+						partie.setEtat("erreurPoser");
+					}
 				}
-				} else if (partie.getEtat() == "attenteDeplacer" || partie.getEtat() == "erreurChoixDeplacer" || partie.getEtat() == "erreurDeplacer" || partie.getEtat().indexOf("carteADeplacer") != -1) {
+			} else if (partie.getEtat() == "attenteDeplacer" || partie.getEtat() == "erreurChoixDeplacer" || partie.getEtat() == "erreurDeplacer" || partie.getEtat().indexOf("carteADeplacer") != -1) {
 				if(partie.getEtat() == "attenteDeplacer" || partie.getEtat() == "erreurChoixDeplacer" ) {
 					System.out.println("Saisissez coordonnée x de la carte à déplacer: ");
 					int x = Integer.parseInt(this.lireChaine());
@@ -110,12 +162,46 @@ public class VueText implements Observer, Runnable{
 				}
 				
 			} else if((saisie.equalsIgnoreCase(VueText.FINTOUR) && partie.getEtat().indexOf("poser") != -1) || (saisie.equalsIgnoreCase(VueText.FINTOUR) && partie.getEtat().indexOf("deplacer") != -1 && partie.getCartePiochee() == null)) {
-				System.out.println("Etat (dans if) : " + partie.getEtat());
-				if(partie.getDeck().size() > 0 ) {
-					partie.piocher();
-					partie.nouveauRound();
+				if(partie.getVariante().getNom().equalsIgnoreCase("Avance")) {
+					if(partie.getDeck().size() == 0) {
+						if(partie.allPlayerHaveOneCard()) {
+							partie.getJoueurs().forEach(joueur -> {
+								joueur.setCarteVictoire(joueur.getMain().get(0));
+							});
+							partie.calculerScore();
+						} else {
+							partie.nouveauRound();
+						}
+						
+					} else {
+						partie.piocher();
+						partie.nouveauRound();
+					}
+				} else if(partie.getVariante().getNom().equalsIgnoreCase("Normal")) {
+					if(partie.getDeck().size() > 0 ) {
+						partie.piocher();
+						partie.nouveauRound();
+					} else {
+						partie.calculerScore();
+					}
+					//System.out.println(partie);
 				} else {
-					partie.calculerScore();
+					if(partie.getPlateau().isFull()) {
+						partie.calculerScore();
+					} else {
+						partie.piocher();
+						partie.nouveauRound();
+					}
+				}
+			} else if (partie.getEtat().indexOf("carteAPoser") != -1) {
+				int idCarte = Character.getNumericValue(partie.getEtat().charAt(partie.getEtat().length() - 1));
+				System.out.println("Saisissez coordonnée x: ");
+				int x = Integer.parseInt(this.lireChaine());
+				System.out.println("Saisissez coordonnée y: ");
+				int y = Integer.parseInt(this.lireChaine());
+				boolean isPosee = partie.poserCarte(x, y);
+				if(isPosee == false) {
+					partie.setEtat("carteAPoser" + idCarte);
 				}
 			}
 			
@@ -132,7 +218,7 @@ public class VueText implements Observer, Runnable{
 	
 	private String messageConsole() {
 		if(partie.getEtat() == "") {
-			return VueText.START + " pour lancer une partie !";
+			return VueText.START + " pour configurer la partie !";
 		} else if(partie.getEtat() == "initialisation") {
 			return VueText.POSER + " pour poser une carte !";
 		} else if (partie.getEtat() == "attentePoser") {
@@ -155,7 +241,11 @@ public class VueText implements Observer, Runnable{
 				System.out.println("Tour(s): " + ((Partie)o).getRound());
 				System.out.println("Deck: " + (((Partie)o).getDeck().size()));
 				System.out.println("C'est au tour de " + ((Partie)o).getJoueurs().get(0).getNom() + " de jouer");
-				System.out.println("Carte piochée " + ((Partie)o).getCartePiochee());
+				if(partie.getVariante().getNom().equalsIgnoreCase("Avance")) {
+					partie.getJoueurs().get(0).afficherMain();
+				} else {
+					System.out.println("Carte piochée " + ((Partie)o).getCartePiochee());	
+				}
 				break;
 			}
 			case "attentePoser" : {
@@ -179,7 +269,11 @@ public class VueText implements Observer, Runnable{
 				System.out.println("Tour: " + (((Partie) o).getRound() + 1));
 				System.out.println("Deck: " + (((Partie)o).getDeck().size()));
 				System.out.println("C'est au tour de " + ((Partie)o).getJoueurs().get(idJoueur).getNom() + " de jouer");
-				System.out.println("Carte piochée " + ((Partie)o).getCartePiochee());
+				if(partie.getVariante().getNom().equalsIgnoreCase("Avance")) {
+					partie.getJoueurs().get(idJoueur).afficherMain();
+				} else {
+					System.out.println("Carte piochée " + ((Partie)o).getCartePiochee());	
+				}
 				break;
 			}
 			case "finPartie" : {
@@ -212,6 +306,10 @@ public class VueText implements Observer, Runnable{
 				y = Character.getNumericValue(((Partie) o).getEtat().charAt(((Partie) o).getEtat().length() - 1));
 				//Carte c = partie.getPlateau().getCartesPosees().get(y).get(x);
 				System.out.println("Carte déplacée en " + x + ", " + y);
+			}
+			else if (((Partie) o).getEtat().indexOf("carteAPoser") != -1) {
+				System.out.println("Carte à poser: ");
+				System.out.println(((Partie) o).getVariante().getCarteAPoser());
 			}
 		}
 	}

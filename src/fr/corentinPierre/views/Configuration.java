@@ -50,6 +50,7 @@ public class Configuration extends JPanel implements Observer {
 	ArrayList<JCheckBox> checkboxes;
 	ArrayList<JTextField> inputs;
 	JLabel wIcon;
+	JButton btnRegles;
 
 	/**
 	 * Create the panel.
@@ -95,7 +96,7 @@ public class Configuration extends JPanel implements Observer {
 		panel.add(nbJoueurs);
 		
 		btnStart = new JButton("Start");
-		btnStart.setBounds(137, 264, 106, 34);
+		btnStart.setBounds(50, 264, 106, 34);
 		panel.add(btnStart);
 		
 		panelJoueurs = new JPanel();
@@ -182,6 +183,11 @@ public class Configuration extends JPanel implements Observer {
 		checkboxes.add(virtuel3);
 		cc.startPartie(btnStart, inputs, checkboxes);
 		cc.changeType(typePartie);
+		
+		btnRegles = new JButton("R\u00E8gles");
+		btnRegles.setBounds(212, 264, 106, 34);
+		panel.add(btnRegles);
+		cc.displayRules(btnRegles);
 		config.addObserver(this);
 	}
 

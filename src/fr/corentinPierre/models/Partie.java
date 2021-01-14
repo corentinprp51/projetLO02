@@ -95,18 +95,44 @@ public class Partie extends Observable implements Serializable {
 	}
 	
 	public Carte piocher() {
-		this.cartePiochee = this.deck.remove(0);
-		return this.cartePiochee;
+		return regle.piocher();
 		
 	}
 	
 	public void nouveauRound() {
 		//System.out.println("Fin du tour...");
-		this.round++;
-		this.alreadyDeplacee = false;
-		this.etat = "finTour";
-		this.setChanged();
-		this.notifyObservers();
+		if(this.getVariante().getNom().equalsIgnoreCase("Refill")) {
+			if(this.getPlateau().getNbCartesPosees() == 7) {
+				//On refill le packet et on mélange
+				LinkedList<Carte> refill = new LinkedList<Carte>();
+				for(int j = 0; j < Forme.values().length; j++) {
+					for (int k = 0; k < Couleur.values().length; k++) {
+						for(int l = 0; l < 2; l++) {
+							boolean fillable;
+							if(l == 0) fillable = false;
+							else fillable = true;
+							Carte carte = new Carte(Forme.values()[j], Couleur.values()[k], fillable);
+							refill.add(carte);
+						}
+					}
+				}
+				for(int i = 0; i < 10; i++) {
+					this.deck.add(refill.get(i));
+				}
+				Collections.shuffle(this.deck);
+			}
+			this.round++;
+			this.alreadyDeplacee = false;
+			this.etat = "finTour";
+			this.setChanged();
+			this.notifyObservers();
+		} else {
+			this.round++;
+			this.alreadyDeplacee = false;
+			this.etat = "finTour";
+			this.setChanged();
+			this.notifyObservers();
+		}
 	}
 	
 	public LinkedList<Carte> getDeck(){
@@ -177,7 +203,12 @@ public class Partie extends Observable implements Serializable {
 		int [] coordonnees = {x,y};
 		if(this.round == 0) {
 			//System.out.println(j.getNom() + " pioche" + c);
-			this.getPlateau().setCartesPosees(coordonnees[0], coordonnees[1], this.cartePiochee);
+			if(this.getVariante().getNom().equalsIgnoreCase("Avance")) {
+				this.getPlateau().setCartesPosees(coordonnees[0], coordonnees[1], this.getVariante().getCarteAPoser());
+				this.getVariante().setCarteAPoser(null);
+			} else {
+				this.getPlateau().setCartesPosees(coordonnees[0], coordonnees[1], this.cartePiochee);	
+			}
 		} else {
 			if(this.getPlateau().getCartesPosees().containsKey(coordonnees[1]) && this.getPlateau().getCartesPosees().get(coordonnees[1]).containsKey(coordonnees[0])) {
 				//System.out.println("Il y a déjà une carte en: " + coordonnees[0] + ", " + coordonnees[1]);
@@ -191,9 +222,14 @@ public class Partie extends Observable implements Serializable {
 				//System.out.println("La règle de base n'est pas respectée");
 				return false;
 			}
+			if(this.getVariante().getNom().equalsIgnoreCase("Avance")) {
+				this.getPlateau().setCartesPosees(coordonnees[0], coordonnees[1], this.getVariante().getCarteAPoser());
+				this.getVariante().setCarteAPoser(null);
+			} else {
+				this.getPlateau().setCartesPosees(coordonnees[0], coordonnees[1], this.cartePiochee);
+			}
 		}
 		//System.out.println("Placement de la carte en " + coordonnees[0] + "," + coordonnees[1]);
-		this.getPlateau().setCartesPosees(coordonnees[0], coordonnees[1], this.cartePiochee);
 		this.cartePiochee = null;
 		this.etat = "poser" + coordonnees[0] + coordonnees[1];
 		this.setChanged();
@@ -239,6 +275,20 @@ public class Partie extends Observable implements Serializable {
 		return true;
 	}
 	
+	public boolean allPlayerHaveOneCard() {
+		int compteur = 0;
+		for(int i = 0; i<this.getJoueurs().size(); i++) {
+			if (this.joueurs.get(i).getMain().size() == 1) {
+				compteur++;
+			}
+		}
+		if(compteur == this.getJoueurs().size()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public void calculerScore() {
 		for(int i = 0; i<this.joueurs.size(); i++) {
 			int scoreForme = this.calculerForme(this.joueurs.get(i).getCarteVictoire());
@@ -249,15 +299,7 @@ public class Partie extends Observable implements Serializable {
 		this.setEtat("finPartie");
 	}
 	
-	protected void attribuerCartesVictoires() {
-		for(int i = 0; i<this.joueurs.size(); i++) {
-			Random rand = new Random();
-			int randIndex = rand.nextInt(this.deck.size());
-			this.joueurs.get(i).setCarteVictoire(this.deck.get(randIndex));
-			this.deck.remove(randIndex);
-		}
-	}
-	
+
 	public int calculerFillable(Carte victoire) {
 		int score = 0;
 		//Comptage Horizontal

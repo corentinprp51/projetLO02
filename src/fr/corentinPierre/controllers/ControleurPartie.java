@@ -5,13 +5,17 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 
 import fr.corentinPierre.models.Carte;
 import fr.corentinPierre.models.JoueurHumain;
 import fr.corentinPierre.models.JoueurVirtuel;
 import fr.corentinPierre.models.JoueurVirtuelDebutant;
 import fr.corentinPierre.models.Partie;
+import fr.corentinPierre.models.Variante2;
 import fr.corentinPierre.views.JButtonCustom;
+import fr.corentinPierre.views.JButtonIndex;
+import fr.corentinPierre.views.Scores;
 
 
 public class ControleurPartie {
@@ -42,13 +46,37 @@ public class ControleurPartie {
 	public void finTour(JButton btn) {
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if(partie.getDeck().size() > 0 ) {
-					partie.piocher();
-					partie.nouveauRound();
+				if(partie.getVariante().getNom().equalsIgnoreCase("Avance")) {
+					if(partie.getDeck().size() == 0) {
+						if(partie.allPlayerHaveOneCard()) {
+							partie.getJoueurs().forEach(joueur -> {
+								joueur.setCarteVictoire(joueur.getMain().get(0));
+							});
+							partie.calculerScore();
+						} else {
+							partie.nouveauRound();
+						}
+						
+					} else {
+						partie.piocher();
+						partie.nouveauRound();
+					}
+				} else if(partie.getVariante().getNom().equalsIgnoreCase("Normal")) {
+					if(partie.getDeck().size() > 0 ) {
+						partie.piocher();
+						partie.nouveauRound();
+					} else {
+						partie.calculerScore();
+					}
+					//System.out.println(partie);
 				} else {
-					partie.calculerScore();
+					if(partie.getPlateau().isFull()) {
+						partie.calculerScore();
+					} else {
+						partie.piocher();
+						partie.nouveauRound();
+					}
 				}
-				//System.out.println(partie);
 			}
 		});
 	}
@@ -73,11 +101,17 @@ public class ControleurPartie {
 		grille.forEach(btn -> {
 			btn.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					if(partie.getEtat() == "attentePoser" || partie.getEtat() == "erreurPoser") {
-						boolean isPosee = partie.poserCarte(btn.getXGrille(), btn.getYGrille());
-						if(isPosee == false) {
-							partie.setEtat("erreurPoser");
-						}
+					if(partie.getEtat() == "attentePoser" || partie.getEtat() == "erreurPoser" || partie.getEtat().indexOf("carteAPoser") != -1) {
+							boolean isPosee;
+							if(partie.getCartePiochee() != null || partie.getVariante().getCarteAPoser() != null) {
+								isPosee = partie.poserCarte(btn.getXGrille(), btn.getYGrille());
+							} else {
+								isPosee = false;
+							}
+							
+							if(isPosee == false) {
+								partie.setEtat("erreurPoser");
+							}
 					} else if(partie.getEtat() == "attenteDeplacer" || partie.getEtat() == "erreurChoixDeplacer") {
 						//Choix d'une carte à déplacer
 						Carte c = partie.prendreCarteADeplacer(btn.getXGrille(), btn.getYGrille());
@@ -96,6 +130,40 @@ public class ControleurPartie {
 					}
 				}
 			});
+		});
+	}
+	
+	public void carteAPoser(ArrayList<JButtonIndex> main) {
+		main.forEach(btn -> {
+			btn.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent arg0) {
+					if(partie.getVariante().getNom().equalsIgnoreCase("Avance")) {
+						//btn.setIcon(null);
+						Carte c = partie.getJoueurs().get(partie.getRound() % partie.getJoueurs().size()).removeCarteFromMainByIndex(btn.getIndex());
+						partie.getVariante().setCarteAPoser(c);
+						partie.setEtat("carteAPoser" + btn.getIndex());
+					}
+					
+				}
+			});
+		});
+	}
+	
+	public void displayScores(JButton btn) {
+		btn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					Scores dialog = new Scores();
+					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					dialog.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+			}
 		});
 	}
 

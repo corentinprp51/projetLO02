@@ -37,12 +37,12 @@ import fr.corentinPierre.models.Variante1;
 
 import javax.swing.JLabel;
 import java.awt.Font;
+import javax.swing.SwingConstants;
 
 public class MonInterface implements Observer {
 
 	private JFrame frame;
 	private Partie partie;
-	private JButton buttonStart;
 	private JLabel labelJoueur;
 	private JLabel labelTour;
 	private JLabel labelDeck;
@@ -59,6 +59,8 @@ public class MonInterface implements Observer {
 	private JLabel lblVainqueur;
 	private Configuration configurationPanel;
 	private JPanel panel;
+	private Variante2 panelVariante2;
+	private JButton btnDisplayScore;
 
 	/**
 	 * Launch the application.
@@ -90,11 +92,10 @@ public class MonInterface implements Observer {
 		partie.addObserver(this);
 		partie.setEtat(partie.getEtat());
 		ControleurPartie cp = new ControleurPartie(partie);
-		cp.startEvent(buttonStart);
 		cp.finTour(buttonFinTour);
 		cp.askPoser(buttonPoser);
 		cp.askDeplacer(buttonDeplacer);
-		
+		cp.displayScores(btnDisplayScore);
 		cp.poserCarte(grille);
 	}
 
@@ -213,37 +214,38 @@ public class MonInterface implements Observer {
 		panel_1.add(buttonCarteVictoire);
 		
 		JLabel labelCartePiochée = new JLabel("Carte Pioch\u00E9e");
+		labelCartePiochée.setHorizontalAlignment(SwingConstants.CENTER);
 		labelCartePiochée.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		labelCartePiochée.setBounds(10, 11, 89, 23);
+		labelCartePiochée.setBounds(0, 11, 114, 23);
 		panel_1.add(labelCartePiochée);
 		
 		JLabel labelCarteVictoire = new JLabel("Carte Victoire");
+		labelCarteVictoire.setHorizontalAlignment(SwingConstants.CENTER);
 		labelCarteVictoire.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		labelCarteVictoire.setBounds(681, 11, 89, 23);
+		labelCarteVictoire.setBounds(665, 11, 105, 23);
 		panel_1.add(labelCarteVictoire);
 		
 		labelJoueur = new JLabel("");
+		labelJoueur.setHorizontalAlignment(SwingConstants.CENTER);
 		labelJoueur.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		labelJoueur.setBounds(300, 11, 105, 42);
+		labelJoueur.setBounds(124, 11, 531, 42);
 		panel_1.add(labelJoueur);
 		
 		labelDeck = new JLabel("Deck: /");
 		labelDeck.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		labelDeck.setBounds(321, 48, 56, 23);
+		labelDeck.setBounds(362, 48, 56, 23);
 		panel_1.add(labelDeck);
 		
 		labelInfos = new JLabel("Messages d'information ici");
+		labelInfos.setHorizontalAlignment(SwingConstants.CENTER);
 		labelInfos.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		labelInfos.setBounds(199, 95, 309, 38);
+		labelInfos.setBounds(124, 95, 531, 38);
 		panel_1.add(labelInfos);
 		
-		buttonStart = new JButton("Start");
-		buttonStart.setBounds(310, 178, 89, 23);
-		panel_1.add(buttonStart);
 		
 		labelTour = new JLabel("Tour: /");
 		labelTour.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		labelTour.setBounds(321, 76, 56, 23);
+		labelTour.setBounds(362, 76, 56, 23);
 		panel_1.add(labelTour);
 		
 		
@@ -252,8 +254,9 @@ public class MonInterface implements Observer {
 		panel_2.setLayout(null);
 		
 		lblVainqueur = new JLabel("");
+		lblVainqueur.setHorizontalAlignment(SwingConstants.CENTER);
 		lblVainqueur.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblVainqueur.setBounds(0, 11, 796, 36);
+		lblVainqueur.setBounds(246, 11, 288, 36);
 		panel_2.add(lblVainqueur);
 		
 		JPanel panel_Score_1 = new JPanel();
@@ -264,7 +267,8 @@ public class MonInterface implements Observer {
 		panel_Score_1.setLayout(null);
 		
 		JLabel lbjJoueur1 = new JLabel("Corentin");
-		lbjJoueur1.setBounds(39, 5, 41, 14);
+		lbjJoueur1.setHorizontalAlignment(SwingConstants.CENTER);
+		lbjJoueur1.setBounds(10, 5, 100, 14);
 		lbjJoueur1.setEnabled(false);
 		panel_Score_1.add(lbjJoueur1);
 		
@@ -274,7 +278,8 @@ public class MonInterface implements Observer {
 		panel_Score_1.add(btnScore1);
 		
 		JLabel labelScore1 = new JLabel("8");
-		labelScore1.setBounds(52, 30, 15, 14);
+		labelScore1.setHorizontalAlignment(SwingConstants.CENTER);
+		labelScore1.setBounds(10, 30, 100, 14);
 		labelScore1.setEnabled(false);
 		panel_Score_1.add(labelScore1);
 		
@@ -286,7 +291,8 @@ public class MonInterface implements Observer {
 		this.scores.add(panel_Score_2);
 		
 		JLabel lbjJoueur2 = new JLabel("Corentin");
-		lbjJoueur2.setBounds(39, 5, 41, 14);
+		lbjJoueur2.setHorizontalAlignment(SwingConstants.CENTER);
+		lbjJoueur2.setBounds(10, 5, 100, 14);
 		lbjJoueur2.setEnabled(false);
 		panel_Score_2.add(lbjJoueur2);
 		
@@ -296,7 +302,8 @@ public class MonInterface implements Observer {
 		panel_Score_2.add(btnScore2);
 		
 		JLabel labelScore2 = new JLabel("8");
-		labelScore2.setBounds(52, 30, 15, 14);
+		labelScore2.setHorizontalAlignment(SwingConstants.CENTER);
+		labelScore2.setBounds(10, 30, 100, 14);
 		labelScore2.setEnabled(false);
 		panel_Score_2.add(labelScore2);
 		
@@ -308,7 +315,8 @@ public class MonInterface implements Observer {
 		this.scores.add(panel_Score_3);
 		
 		JLabel lbjJoueur3 = new JLabel("Corentin");
-		lbjJoueur3.setBounds(39, 5, 41, 14);
+		lbjJoueur3.setHorizontalAlignment(SwingConstants.CENTER);
+		lbjJoueur3.setBounds(10, 5, 100, 14);
 		lbjJoueur3.setEnabled(false);
 		lbjJoueur3.setVisible(false);
 		panel_Score_3.add(lbjJoueur3);
@@ -320,14 +328,19 @@ public class MonInterface implements Observer {
 		panel_Score_3.add(btnScore3);
 		
 		JLabel labelScore3 = new JLabel("8");
-		labelScore3.setBounds(52, 30, 15, 14);
+		labelScore3.setHorizontalAlignment(SwingConstants.CENTER);
+		labelScore3.setBounds(10, 30, 100, 14);
 		labelScore3.setEnabled(false);
 		labelScore3.setVisible(false);
 		panel_Score_3.add(labelScore3);
 		
 		//Désactivation des boutons de la grille
 		this.setGrilleEnabled(false);
+		panelVariante2 = new Variante2(partie);
 		
+		btnDisplayScore = new JButton("R\u00E8gle Score");
+		btnDisplayScore.setBounds(544, 11, 150, 36);
+		panel_2.add(btnDisplayScore);
 	}
 
 	@Override
@@ -337,22 +350,34 @@ public class MonInterface implements Observer {
 			case "initialisation": {
 				frame.getContentPane().remove(configurationPanel);
 				frame.getContentPane().add(panel);
-				frame.getContentPane().add(panel_1);
+				if(partie.getVariante().getNom().equalsIgnoreCase("Avance")) {
+					 frame.getContentPane().add(panelVariante2);
+				} else {
+					panelVariante2 = null;
+					frame.getContentPane().add(panel_1);
+					ImageIcon img = this.resizeImage(((Partie) o).getJoueurs().get(0).getCarteVictoire().getImageName(), 100, 100);
+					buttonCarteVictoire.setIcon(img);
+					ImageIcon imgPosee = this.resizeImage(((Partie) o).getCartePiochee().getImageName(), 100, 100);
+					buttonCartePiochee.setIcon(imgPosee);
+				}
 				buttonPoser.setEnabled(true);
 				this.setGrilleEnabled(true);
 				this.labelJoueur.setText(((Partie) o).getJoueurs().get(0).getNom());
 				//Affichage carte victoire
-				ImageIcon img = this.resizeImage(((Partie) o).getJoueurs().get(0).getCarteVictoire().getImageName(), 100, 100);
-				buttonCarteVictoire.setIcon(img);
-				ImageIcon imgPosee = this.resizeImage(((Partie) o).getCartePiochee().getImageName(), 100, 100);
-				buttonCartePiochee.setIcon(imgPosee);
 				this.labelDeck.setText("Deck: " + (((Partie)o).getDeck().size()));
 				this.labelTour.setText("Tour: " + (((Partie)o).getRound() + 1));
 				if(this.isJoueurVirtuel()) {
 					JoueurVirtuel jv = this.getJoueurVirtuel();
 					int[] coords = jv.choisirEmplacement();
-					System.out.println("Coordonnées random: " + coords[0] + ", " + coords[1]);
-					buttonPoser.doClick();
+					if(partie.getVariante().getNom().equalsIgnoreCase("Avance")) {
+						int idJoueur = ((Partie) o).getRound()%((Partie)o).getJoueurs().size();
+						panelVariante2.clickPoser();
+						//panelVariante2.clickMain(0);
+					} else {
+						System.out.println("Coordonnées random: " + coords[0] + ", " + coords[1]);
+						buttonPoser.doClick();
+					}
+					
 					this.findButton(coords[0], coords[1]).doClick();
 				}
 				break;
@@ -365,6 +390,10 @@ public class MonInterface implements Observer {
 				if(this.isJoueurVirtuel()) {
 					JoueurVirtuel jv = this.getJoueurVirtuel();
 					int[] coords = jv.choisirEmplacement();
+					if(partie.getVariante().getNom().equalsIgnoreCase("Avance")) {
+						panelVariante2.attentePoser();
+						panelVariante2.clickMain(0);
+					}
 					this.findButton(coords[0], coords[1]).doClick();
 				}
 				break;
@@ -380,30 +409,36 @@ public class MonInterface implements Observer {
 				if(partie.getLoaded()) {
 					frame.getContentPane().remove(configurationPanel);
 					frame.getContentPane().add(panel);
-					frame.getContentPane().add(panel_1);
-					//buttonPoser.setEnabled(true);
 					this.setGrilleEnabled(true);
 					this.retablirGrille();
+					if(partie.getVariante().getNom().equalsIgnoreCase("Normal") || partie.getVariante().getNom().equalsIgnoreCase("Refill")) {
+						frame.getContentPane().add(panel_1);
+					} else {
+						frame.getContentPane().add(panelVariante2);
+					}
 				}
-				labelInfos.setText("");
-				buttonPoser.setEnabled(true);
-				if(partie.getRound() > 1) {
-					buttonDeplacer.setEnabled(true);
+				if(this.partie.getVariante().getNom().equalsIgnoreCase("Normal") || partie.getVariante().getNom().equalsIgnoreCase("Refill")) {
+					labelInfos.setText("");
+					buttonPoser.setEnabled(true);
+					if(partie.getRound() > 1) {
+						buttonDeplacer.setEnabled(true);
+					}
+						buttonFinTour.setEnabled(false);
+						int idJoueur = ((Partie) o).getRound()%((Partie)o).getJoueurs().size();
+						this.labelTour.setText("Tour: " + (((Partie) o).getRound() + 1));
+						this.labelJoueur.setText(((Partie) o).getJoueurs().get(idJoueur).getNom());
+						//Affichage carte victoire
+						ImageIcon img = this.resizeImage(((Partie) o).getJoueurs().get(idJoueur).getCarteVictoire().getImageName(), 100, 100);
+						buttonCarteVictoire.setIcon(img);
+						ImageIcon imgPosee = this.resizeImage(((Partie) o).getCartePiochee().getImageName(), 100, 100);
+						buttonCartePiochee.setIcon(imgPosee);
+						this.labelDeck.setText("Deck: " + (((Partie)o).getDeck().size()));
+					if(this.isJoueurVirtuel()) {
+						buttonPoser.doClick();
+					}
+					//System.out.println(((Partie) o).getDeck().size());
 				}
-				buttonFinTour.setEnabled(false);
-					int idJoueur = ((Partie) o).getRound()%((Partie)o).getJoueurs().size();
-					this.labelTour.setText("Tour: " + (((Partie) o).getRound() + 1));
-					this.labelJoueur.setText(((Partie) o).getJoueurs().get(idJoueur).getNom());
-					//Affichage carte victoire
-					ImageIcon img = this.resizeImage(((Partie) o).getJoueurs().get(idJoueur).getCarteVictoire().getImageName(), 100, 100);
-					buttonCarteVictoire.setIcon(img);
-					ImageIcon imgPosee = this.resizeImage(((Partie) o).getCartePiochee().getImageName(), 100, 100);
-					buttonCartePiochee.setIcon(imgPosee);
-					this.labelDeck.setText("Deck: " + (((Partie)o).getDeck().size()));
-				if(this.isJoueurVirtuel()) {
-					buttonPoser.doClick();
-				}
-				//System.out.println(((Partie) o).getDeck().size());
+				
 				break;
 				
 			}
@@ -413,6 +448,9 @@ public class MonInterface implements Observer {
 					JoueurVirtuel jv = this.getJoueurVirtuel();
 					int[] coords = jv.choisirEmplacement();
 					System.out.println("Coordonnées random: " + coords[0] + ", " + coords[1]);
+					if(partie.getVariante().getNom().equalsIgnoreCase("Avance")) {
+						panelVariante2.clickMain(0);
+					}
 					this.findButton(coords[0], coords[1]).doClick();
 				}
 				break;
@@ -431,7 +469,12 @@ public class MonInterface implements Observer {
 				buttonPoser.setEnabled(false);
 				buttonFinTour.setEnabled(false);
 				buttonDeplacer.setEnabled(false);
-				frame.getContentPane().remove(panel_1);
+				if(partie.getVariante().getNom() == "Avance") {
+					frame.getContentPane().remove(panelVariante2);
+				} else {
+					frame.getContentPane().remove(panel_1);
+				}
+				
 				frame.getContentPane().add(panel_2);
 				//Affichage du vainqueur
 				lblVainqueur.setText("<html><div style='text-align: center;'>Vainqueur: "+ ((Partie)o).getVainqueur().getNom() + "</div></html>");
@@ -492,7 +535,11 @@ public class MonInterface implements Observer {
 				int x, y;
 				x = Character.getNumericValue(((Partie) o).getEtat().charAt(((Partie) o).getEtat().length() - 2));
 				y = Character.getNumericValue(((Partie) o).getEtat().charAt(((Partie) o).getEtat().length() - 1));
-				this.findButton(x, y).setIcon(null);
+				if(this.partie.getPlateau().getCartesPosees().get(y) != null) {
+					if(!this.partie.getPlateau().getCartesPosees().get(y).containsKey(x)) {
+						this.findButton(x, y).setIcon(null);
+					}
+				}
 			}
 			
 		}
@@ -533,4 +580,5 @@ public class MonInterface implements Observer {
 			}
 		}
 	}
+	
 }

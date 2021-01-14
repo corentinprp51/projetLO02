@@ -9,9 +9,9 @@ import java.util.TreeMap;
 import fr.corentinPierre.enums.Couleur;
 import fr.corentinPierre.enums.Forme;
 
-public class Variante1 extends Variante{
+public class Variante3 extends Variante{
 	
-	public Variante1(String nom, Partie p) {
+	public Variante3(String nom, Partie p) {
 		super(nom, p);
 	}
 	

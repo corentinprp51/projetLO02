@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JTextField;
 
 import fr.corentinPierre.models.Configuration;
@@ -16,6 +17,9 @@ import fr.corentinPierre.models.JoueurVirtuelDebutant;
 import fr.corentinPierre.models.Partie;
 import fr.corentinPierre.models.Plateau;
 import fr.corentinPierre.models.Variante1;
+import fr.corentinPierre.models.Variante2;
+import fr.corentinPierre.models.Variante3;
+import fr.corentinPierre.views.Regles;
 
 public class ControleurConfiguration {
 	private Partie partie;
@@ -44,6 +48,22 @@ public class ControleurConfiguration {
 			public void actionPerformed(ActionEvent e) {
 				config.setTypePartie((String) select.getSelectedItem());
 				
+			}
+		});
+	}
+	
+	public void displayRules(JButton btn) {
+		btn.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					Regles dialog = new Regles();
+					dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+					dialog.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}
@@ -82,10 +102,14 @@ public class ControleurConfiguration {
 					break;
 				}
 				case "Avancé": {
-					System.out.println("Avancé");
+					Variante2 v = new Variante2("Avance", partie);
+					partie.setVariante(v);
+					break;
 				}
 				case "Refill": {
-					System.out.println("Refill");
+					Variante1 v = new Variante1("Refill", partie);
+					partie.setVariante(v);
+					break;
 				}
 				default:
 					//throw new IllegalArgumentException("Unexpected value: " + config.getTypePartie());
