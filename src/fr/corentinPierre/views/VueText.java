@@ -59,8 +59,11 @@ public class VueText implements Observer, Runnable{
 					modeJeu = this.lireChaine();
 				} while (!modeJeu.equalsIgnoreCase("N") && !modeJeu.equalsIgnoreCase("A") && !modeJeu.equalsIgnoreCase("R"));
 				config.setTypePartie(modeJeu);
-				System.out.println("Nombre de joueurs de la partie (2 ou 3)");
-				int nbJoueurs = Integer.parseInt(this.lireChaine());
+				int nbJoueurs = -1;
+				do {
+					System.out.println("Indiquez le nombre de joueurs (2 ou 3)");
+					nbJoueurs = Integer.parseInt(this.lireChaine());
+				} while (nbJoueurs != 3 && nbJoueurs != 2);
 				config.setNombreJoueursAttendu(nbJoueurs);
 				for(int i = 0; i < nbJoueurs; i++) {
 					System.out.println("Joueur Virtuel ? (O / N)");

@@ -144,6 +144,12 @@ public class MonInterface implements Observer {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+				} else if(partie.getEtat().equalsIgnoreCase("finPartie") || partie.getEtat().equalsIgnoreCase("")) {
+					File file = new File("src/save.ser");
+					if(file != null) {
+						file.delete();
+					}
+					System.exit(0);
 				} else {
 					File file = new File("src/save.ser");
 					if(file != null) {

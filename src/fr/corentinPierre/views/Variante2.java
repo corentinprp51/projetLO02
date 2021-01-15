@@ -107,6 +107,7 @@ public class Variante2 extends JPanel implements Observer{
 					
 					case "initialisation": {
 						buttonPoser.setEnabled(true);
+						this.setMainEnabled(false);
 						this.labelJoueur.setText(((Partie) o).getJoueurs().get(0).getNom());
 						//Affichage main joueur
 						for(int i = 0; i < 3; i++) {
@@ -142,6 +143,7 @@ public class Variante2 extends JPanel implements Observer{
 						break;
 					}
 					case "attenteDeplacer": {
+						this.setMainEnabled(false);
 						buttonDeplacer.setEnabled(false);
 						buttonFinTour.setEnabled(false);
 						buttonPoser.setEnabled(false);
@@ -149,7 +151,6 @@ public class Variante2 extends JPanel implements Observer{
 						break;
 					}
 					case "finTour": {
-						this.setMainEnabled(false);
 						labelInfos.setText("");
 						buttonPoser.setEnabled(true);
 						if(partie.getRound() > 1) {
@@ -172,6 +173,7 @@ public class Variante2 extends JPanel implements Observer{
 						if(this.isJoueurVirtuel()) {
 							buttonPoser.doClick();
 						}
+						this.setMainEnabled(false);
 						break;
 						
 					}

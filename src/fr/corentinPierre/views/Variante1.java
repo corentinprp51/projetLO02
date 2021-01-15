@@ -242,6 +242,7 @@ public class Variante1 extends JPanel implements Observer{
 	}
 	
 	public void clickPoser() {
+		this.buttonPoser.setEnabled(true);
 		this.buttonPoser.doClick();
 	}
 	
