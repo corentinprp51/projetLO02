@@ -20,10 +20,9 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class Variante2 extends JPanel implements Observer{
+public class Variante1 extends JPanel implements Observer{
 
 	private Partie partie;
-	private ArrayList<JButtonIndex> mainJ;
 	private JLabel labelJoueur;
 	private JLabel labelDeck;
 	private JLabel labelTour;
@@ -31,109 +30,107 @@ public class Variante2 extends JPanel implements Observer{
 	private JButton buttonPoser;
 	private JButton buttonDeplacer;
 	private JButton buttonFinTour;
+	private JButton buttonCarteVictoire;
+	private JButton buttonCartePiochee;
 	/**
 	 * Create the panel.
 	 */
-	public Variante2(Partie p) {
+	public Variante1(Partie p) {
 		this.partie = p;
 		this.setSize(796, 221);
 		this.setLayout(null);
-		buttonPoser = new JButton("Poser");
-		buttonPoser.setBounds(451, 143, 89, 23);
-		add(buttonPoser);
-		
-		buttonDeplacer = new JButton("D\u00E9placer");
-		buttonDeplacer.setBounds(550, 143, 89, 23);
-		add(buttonDeplacer);
+		initialize();
 		ControleurPartie cp = new ControleurPartie(partie);
 		cp.askPoser(buttonPoser);
 		cp.askDeplacer(buttonDeplacer);
+		cp.finTour(buttonFinTour);
+		partie.addObserver(this);
+		partie.setEtat(partie.getEtat());
 		
-		JButtonIndex main1 = new JButtonIndex("", 0);
-		main1.setBounds(86, 112, 114, 129);
-		add(main1);
+	}
+	
+	public void initialize() {
+		buttonPoser = new JButton("Poser Carte");
+		buttonPoser.setBounds(199, 144, 89, 23);
+		buttonPoser.setEnabled(false);
+		add(buttonPoser);
 		
-		JButtonIndex main2 = new JButtonIndex("", 1);
-		main2.setBounds(197, 112, 114, 129);
-		add(main2);
+		buttonDeplacer = new JButton("D\u00E9placer Carte");
+		buttonDeplacer.setBounds(300, 144, 105, 23);
+		buttonDeplacer.setEnabled(false);
+		add(buttonDeplacer);
 		
-		JButtonIndex main3 = new JButtonIndex("", 2);
-		main3.setBounds(307, 112, 114, 129);
-		add(main3);
+		buttonFinTour = new JButton("Fin Tour");
+		buttonFinTour.setBounds(419, 144, 89, 23);
+		buttonFinTour.setEnabled(false);
+		add(buttonFinTour);
 		
-		this.mainJ = new ArrayList<JButtonIndex>();
-		this.mainJ.add(main1);
-		this.mainJ.add(main2);
-		this.mainJ.add(main3);
-		cp.carteAPoser(mainJ);
+		buttonCartePiochee = new JButton("");
+		buttonCartePiochee.setBounds(0, 38, 114, 129);
+		add(buttonCartePiochee);
 		
-		labelJoueur = new JLabel("a");
-		labelJoueur.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		buttonCarteVictoire = new JButton("");
+		buttonCarteVictoire.setBounds(665, 38, 105, 129);
+		add(buttonCarteVictoire);
+		
+		JLabel labelCartePiochée = new JLabel("Carte Pioch\u00E9e");
+		labelCartePiochée.setHorizontalAlignment(SwingConstants.CENTER);
+		labelCartePiochée.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		labelCartePiochée.setBounds(0, 11, 114, 23);
+		add(labelCartePiochée);
+		
+		JLabel labelCarteVictoire = new JLabel("Carte Victoire");
+		labelCarteVictoire.setHorizontalAlignment(SwingConstants.CENTER);
+		labelCarteVictoire.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		labelCarteVictoire.setBounds(665, 11, 105, 23);
+		add(labelCarteVictoire);
+		
+		labelJoueur = new JLabel("");
 		labelJoueur.setHorizontalAlignment(SwingConstants.CENTER);
-		labelJoueur.setBounds(10, 11, 776, 23);
+		labelJoueur.setFont(new Font("Tahoma", Font.PLAIN, 25));
+		labelJoueur.setBounds(124, 11, 531, 42);
 		add(labelJoueur);
 		
-		labelDeck = new JLabel("Deck: 0");
-		labelDeck.setHorizontalAlignment(SwingConstants.CENTER);
-		labelDeck.setBounds(367, 36, 61, 14);
+		labelDeck = new JLabel("Deck: /");
+		labelDeck.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		labelDeck.setBounds(362, 48, 56, 23);
 		add(labelDeck);
 		
-		labelTour = new JLabel("Tour: 1");
-		labelTour.setHorizontalAlignment(SwingConstants.CENTER);
-		labelTour.setBounds(375, 54, 46, 14);
-		add(labelTour);
-		
-		labelInfos = new JLabel("Messages d'informations ici");
+		labelInfos = new JLabel("Messages d'information ici");
 		labelInfos.setHorizontalAlignment(SwingConstants.CENTER);
-		labelInfos.setBounds(230, 87, 335, 14);
+		labelInfos.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		labelInfos.setBounds(124, 95, 531, 38);
 		add(labelInfos);
 		
 		
-		buttonFinTour = new JButton("Fin Tour");
-		buttonFinTour.setBounds(504, 177, 89, 23);
-		add(buttonFinTour);
-		cp.finTour(buttonFinTour);
-		this.setMainEnabled(false);
-		partie.addObserver(this);
-		partie.setEtat(partie.getEtat());
+		labelTour = new JLabel("Tour: /");
+		labelTour.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		labelTour.setBounds(362, 76, 56, 23);
+		add(labelTour);
 	}
 	@Override
 	public void update(Observable o, Object arg1) {
 		// TODO Auto-generated method stub
 		if (o instanceof Partie) {
 			if(((Partie) o).getVariante() != null) {
-				if(((Partie) o).getVariante().getNom().equalsIgnoreCase("Avance")) {
+				if(((Partie) o).getVariante().getNom().equalsIgnoreCase("Normal") || ((Partie) o).getVariante().getNom().equalsIgnoreCase("Refill")) {
 					switch (((Partie) o).getEtat()) {
 					
 					case "initialisation": {
 						buttonPoser.setEnabled(true);
 						this.labelJoueur.setText(((Partie) o).getJoueurs().get(0).getNom());
-						//Affichage main joueur
-						for(int i = 0; i < 3; i++) {
-							ImageIcon img = this.resizeImage(((Partie) o).getJoueurs().get(0).getMain().get(i).getImageName(), 100, 100);
-							this.mainJ.get(i).setIcon(img);
-						}
-						//
 						this.labelDeck.setText("Deck: " + (((Partie)o).getDeck().size()));
 						this.labelTour.setText("Tour: " + (((Partie)o).getRound() + 1));
 						buttonDeplacer.setEnabled(false);
-						//buttonFinDuTour.setEnabled(true);
 						buttonFinTour.setEnabled(false);
-						//if(this.isJoueurVirtuel()) {
-							//JoueurVirtuel jv = this.getJoueurVirtuel();
-							//int[] coords = jv.choisirEmplacement();
-							//System.out.println("Coordonnées random: " + coords[0] + ", " + coords[1]);
-							//buttonPoser.doClick();
-							//this.findButton(coords[0], coords[1]).doClick();
-						//}
+						ImageIcon img = this.resizeImage(((Partie) o).getJoueurs().get(0).getCarteVictoire().getImageName(), 100, 100);
+						buttonCarteVictoire.setIcon(img);
+						ImageIcon imgPosee = this.resizeImage(((Partie) o).getCartePiochee().getImageName(), 100, 100);
+						buttonCartePiochee.setIcon(imgPosee);
 						break;
 					} 
 					case "attentePoser": {
 						int idJoueur = ((Partie) o).getRound()%((Partie)o).getJoueurs().size();
-						for(int i = 0; i < ((Partie)o).getJoueurs().get(idJoueur).getMain().size(); i++) {
-							ImageIcon img = this.resizeImage(((Partie) o).getJoueurs().get(idJoueur).getMain().get(i).getImageName(), 100, 100);
-							this.mainJ.get(i).setEnabled(true);
-						}
 						buttonDeplacer.setEnabled(false);
 						buttonFinTour.setEnabled(false);
 						buttonPoser.setEnabled(false);
@@ -149,26 +146,20 @@ public class Variante2 extends JPanel implements Observer{
 						break;
 					}
 					case "finTour": {
-						this.setMainEnabled(false);
 						labelInfos.setText("");
 						buttonPoser.setEnabled(true);
 						if(partie.getRound() > 1) {
 							buttonDeplacer.setEnabled(true);
 						}
 						buttonFinTour.setEnabled(false);
-							int idJoueur = ((Partie) o).getRound()%((Partie)o).getJoueurs().size();
-							this.labelTour.setText("Tour: " + (((Partie) o).getRound() + 1));
-							this.labelJoueur.setText(((Partie) o).getJoueurs().get(idJoueur).getNom());
-							//Affichage Main du Joueur actualisée
-							for(int i = 0; i < 3; i++) {
-								this.mainJ.get(i).setIcon(null);
-							}
-							for(int i = 0; i < ((Partie)o).getJoueurs().get(idJoueur).getMain().size(); i++) {
-								ImageIcon img = this.resizeImage(((Partie) o).getJoueurs().get(idJoueur).getMain().get(i).getImageName(), 100, 100);
-								this.mainJ.get(i).setIcon(img);
-								this.mainJ.get(i).setEnabled(true);
-							}
-							this.labelDeck.setText("Deck: " + (((Partie)o).getDeck().size()));
+						int idJoueur = ((Partie) o).getRound()%((Partie)o).getJoueurs().size();
+						this.labelTour.setText("Tour: " + (((Partie) o).getRound() + 1));
+						this.labelJoueur.setText(((Partie) o).getJoueurs().get(idJoueur).getNom());
+						this.labelDeck.setText("Deck: " + (((Partie)o).getDeck().size()));
+						ImageIcon img = this.resizeImage(((Partie) o).getJoueurs().get(idJoueur).getCarteVictoire().getImageName(), 100, 100);
+						buttonCarteVictoire.setIcon(img);
+						ImageIcon imgPosee = this.resizeImage(((Partie) o).getCartePiochee().getImageName(), 100, 100);
+						buttonCartePiochee.setIcon(imgPosee);
 						if(this.isJoueurVirtuel()) {
 							buttonPoser.doClick();
 						}
@@ -207,8 +198,8 @@ public class Variante2 extends JPanel implements Observer{
 					}
 					//System.out.println(((Partie) o).getEtat());
 					if(((Partie) o).getEtat().indexOf("poser") != -1) {
+						buttonCartePiochee.setIcon(null);
 						labelInfos.setText("Carte posée");
-						this.setMainEnabled(false);
 						buttonFinTour.setEnabled(true);
 						if(this.isJoueurVirtuel()) {
 							buttonFinTour.doClick();
@@ -218,17 +209,12 @@ public class Variante2 extends JPanel implements Observer{
 						} 
 					} else if (((Partie) o).getEtat().indexOf("deplacerCarte") != -1) {
 						labelInfos.setText("Carte déplacée");
-							if(partie.getJoueurs().get(partie.getRound() % partie.getJoueurs().size()).getMain().size() < 3) {
-								buttonFinTour.setEnabled(true);
-							} else {
-								buttonPoser.setEnabled(true);
-								buttonFinTour.setEnabled(false);
-							}
+						if(partie.getCartePiochee() == null) {
+							buttonFinTour.setEnabled(true);
+						} else {
+							buttonPoser.setEnabled(true);
+						}
 						buttonDeplacer.setEnabled(false);
-					} else if (((Partie) o).getEtat().indexOf("carteAPoser") != -1) {
-						int idCarte = Character.getNumericValue(((Partie)o).getEtat().charAt(partie.getEtat().length() - 1));
-						this.mainJ.get(idCarte).setIcon(null);
-						this.setMainEnabled(false);
 					}
 				}
 			}
@@ -247,11 +233,6 @@ public class Variante2 extends JPanel implements Observer{
 		return new ImageIcon(dimg);
 	}
 	
-	private void setMainEnabled(boolean b) {
-		this.mainJ.forEach(btn -> {
-			btn.setEnabled(b);
-		});
-	}
 	
 	private boolean isJoueurVirtuel() {
 		return partie.getJoueurs().get(partie.getRound() % partie.getJoueurs().size()) instanceof JoueurVirtuel;
@@ -264,19 +245,5 @@ public class Variante2 extends JPanel implements Observer{
 		this.buttonPoser.doClick();
 	}
 	
-	public void clickMain(int id) {
-		this.mainJ.get(id).doClick();
-	}
-	
-	public void attentePoser() {
-		int idJoueur = partie.getRound()%partie.getJoueurs().size();
-		for(int i = 0; i < partie.getJoueurs().get(idJoueur).getMain().size(); i++) {
-			ImageIcon img = this.resizeImage(partie.getJoueurs().get(idJoueur).getMain().get(i).getImageName(), 100, 100);
-			this.mainJ.get(i).setEnabled(true);
-		}
-		buttonDeplacer.setEnabled(false);
-		buttonFinTour.setEnabled(false);
-		buttonPoser.setEnabled(false);
-		labelInfos.setText("Poser la carte");
-	}
+
 }

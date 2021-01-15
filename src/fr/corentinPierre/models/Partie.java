@@ -19,7 +19,7 @@ import java.util.TreeMap;
 import fr.corentinPierre.enums.Couleur;
 import fr.corentinPierre.enums.Forme;
 
-public class Partie extends Observable implements Serializable {
+public class Partie extends Observable implements Serializable, Visitable {
 
 	protected int round;
 	protected LinkedList<Carte> deck;
@@ -291,253 +291,12 @@ public class Partie extends Observable implements Serializable {
 	
 	public void calculerScore() {
 		for(int i = 0; i<this.joueurs.size(); i++) {
-			int scoreForme = this.calculerForme(this.joueurs.get(i).getCarteVictoire());
+			/*int scoreForme = this.calculerForme(this.joueurs.get(i).getCarteVictoire());
 			int scoreCouleur = this.calculerCouleur(this.joueurs.get(i).getCarteVictoire());
-			int scoreFillable = this.calculerFillable(this.joueurs.get(i).getCarteVictoire());
-			this.joueurs.get(i).setScore(scoreCouleur + scoreForme + scoreFillable);
+			int scoreFillable = this.calculerFillable(this.joueurs.get(i).getCarteVictoire());*/
+			this.joueurs.get(i).setScore(this.accept(new ScoreVisitor(), i));
 		}
 		this.setEtat("finPartie");
-	}
-	
-
-	public int calculerFillable(Carte victoire) {
-		int score = 0;
-		//Comptage Horizontal
-		Map<Integer, Map<Integer, Carte>> cartes = new TreeMap<Integer, Map<Integer, Carte>>(this.getPlateau().getCartesPosees());	
-		for(Map.Entry<Integer, Map<Integer, Carte>> entry: cartes.entrySet() ) {
-			int nbCartes = 0;
-			int [] combo = new int[2];
-			combo[0] = 0;
-			combo[1] = 0;
-			for(Map.Entry<Integer, Carte> entry2: entry.getValue().entrySet()) {
-				if(entry2.getValue().getFillable() == victoire.getFillable()) {
-					nbCartes++;
-					
-				} else {
-					if(combo[0] <= 1) {
-						combo[0] = nbCartes;
-					} else {
-						combo[1] = nbCartes;
-					}
-					nbCartes = 0;
-				}
-			}
-			if(nbCartes > 1) {
-				if(combo[0] < 2) {
-					combo[0] = nbCartes;
-				} else {
-					combo[1] = nbCartes;
-				}
-			}
-			if(combo[0] > 2) {
-				score += combo[0];
-			}
-			if(combo[1] > 2) {
-				score += combo[1];
-			}
-		}
-		//Comptage Vertical
-		for(Map.Entry<Integer, Map<Integer, Carte>> entry: cartes.entrySet() ) {
-			for(Map.Entry<Integer, Carte> entry2: entry.getValue().entrySet()) {
-				int i = 0;
-				int [] combo = new int[2];
-				combo[0] = 0;
-				combo[1] = 0;
-				int nbCartes = 0;
-				while(cartes.containsKey(entry.getKey()+i)) {
-					if(cartes.get(entry.getKey() + i).containsKey(entry2.getKey())) {
-						if(cartes.get(entry.getKey() + i).get(entry2.getKey()).getFillable() == victoire.getFillable()) {
-							nbCartes++;
-							//cartes.get(entry.getKey() + i).remove(entry2.getKey());
-							
-						} else {
-							if(combo[0] <= 1) {
-								combo[0] = nbCartes;
-							} else {
-								combo[1] = nbCartes;
-							}
-							nbCartes = 0;
-						}
-					}
-					i++;
-				}
-				if(nbCartes > 1) {
-					if(combo[0] < 2) {
-						combo[0] = nbCartes;
-					} else {
-						combo[1] = nbCartes;
-					}
-				}
-				if(combo[0] > 2) {
-					score += combo[0];
-				}
-				if(combo[1] > 2) {
-					score += combo[1];
-				}
-			}
-			break;
-		}
-		return score;
-	}
-	
-	public int calculerCouleur(Carte victoire) {
-		int score = 0;
-		//Comptage Horizontal
-		Map<Integer, Map<Integer, Carte>> cartes = new TreeMap<Integer, Map<Integer, Carte>>(this.getPlateau().getCartesPosees());	
-		for(Map.Entry<Integer, Map<Integer, Carte>> entry: cartes.entrySet() ) {
-			int nbCartes = 0;
-			int [] combo = new int[2];
-			combo[0] = 0;
-			combo[1] = 0;
-			for(Map.Entry<Integer, Carte> entry2: entry.getValue().entrySet()) {
-				if(entry2.getValue().getCouleur() == victoire.getCouleur()) {
-					nbCartes++;
-					
-				} else {
-					if(combo[0] <= 1) {
-						combo[0] = nbCartes;
-					} else {
-						combo[1] = nbCartes;
-					}
-					nbCartes = 0;
-				}
-			}
-			if(nbCartes > 1) {
-				if(combo[0] < 2) {
-					combo[0] = nbCartes;
-				} else {
-					combo[1] = nbCartes;
-				}
-			}
-			if(combo[0] > 2) {
-				score += combo[0] + 1;
-			}
-			if(combo[1] > 2) {
-				score += combo[1] + 1;
-			}
-		}
-		//Comptage Vertical
-		for(Map.Entry<Integer, Map<Integer, Carte>> entry: cartes.entrySet() ) {
-			for(Map.Entry<Integer, Carte> entry2: entry.getValue().entrySet()) {
-				int i = 0;
-				int [] combo = new int[2];
-				combo[0] = 0;
-				combo[1] = 0;
-				int nbCartes = 0;
-				while(cartes.containsKey(entry.getKey()+i)) {
-					if(cartes.get(entry.getKey() + i).containsKey(entry2.getKey())) {
-						if(cartes.get(entry.getKey() + i).get(entry2.getKey()).getCouleur() == victoire.getCouleur()) {
-							nbCartes++;
-							//cartes.get(entry.getKey() + i).remove(entry2.getKey());
-							
-						} else {
-							if(combo[0] <= 1) {
-								combo[0] = nbCartes;
-							} else {
-								combo[1] = nbCartes;
-							}
-							nbCartes = 0;
-						}
-					}
-					i++;
-				}
-				if(nbCartes > 1) {
-					if(combo[0] < 2) {
-						combo[0] = nbCartes;
-					} else {
-						combo[1] = nbCartes;
-					}
-				}
-				if(combo[0] > 2) {
-					score += combo[0] + 1;
-				}
-				if(combo[1] > 2) {
-					score += combo[1] + 1;
-				}
-			}
-			break;
-		}
-		return score;
-	}
-	public int calculerForme(Carte victoire) {
-		int score = 0;
-		//Comptage Horizontal
-		Map<Integer, Map<Integer, Carte>> cartes = new TreeMap<Integer, Map<Integer, Carte>>(this.getPlateau().getCartesPosees());	
-		for(Map.Entry<Integer, Map<Integer, Carte>> entry: cartes.entrySet() ) {
-			int nbCartes = 0;
-			int [] combo = new int[2];
-			combo[0] = 0;
-			combo[1] = 0;
-			for(Map.Entry<Integer, Carte> entry2: entry.getValue().entrySet()) {
-				if(entry2.getValue().getForme() == victoire.getForme()) {
-					nbCartes++;
-					
-				} else {
-					if(combo[0] <= 1) {
-						combo[0] = nbCartes;
-					} else {
-						combo[1] = nbCartes;
-					}
-					nbCartes = 0;
-				}
-			}
-			if(nbCartes > 1) {
-				if(combo[0] < 2) {
-					combo[0] = nbCartes;
-				} else {
-					combo[1] = nbCartes;
-				}
-			}
-			if(combo[0] > 1) {
-				score += combo[0] - 1;
-			}
-			if(combo[1] > 1) {
-				score += combo[1] - 1;
-			}
-		}
-		//Comptage Vertical
-		//Affichage du tapis final: 
-		for(Map.Entry<Integer, Map<Integer, Carte>> entry: this.getPlateau().getCartesPosees().entrySet() ) {
-			for(Map.Entry<Integer, Carte> entry2: entry.getValue().entrySet()) {
-				int i = 0;
-				int [] combo = new int[2];
-				combo[0] = 0;
-				combo[1] = 0;
-				int nbCartes = 0;
-				while(cartes.containsKey(entry.getKey()+i)) {
-					if(cartes.get(entry.getKey() + i).containsKey(entry2.getKey())) {
-						if(cartes.get(entry.getKey() + i).get(entry2.getKey()).getForme() == victoire.getForme()) {
-							nbCartes++;
-							//cartes.get(entry.getKey() + i).remove(entry2.getKey());
-							
-						} else {
-							if(combo[0] <= 1) {
-								combo[0] = nbCartes;
-							} else {
-								combo[1] = nbCartes;
-							}
-							nbCartes = 0;
-						}
-					}
-					i++;
-				}
-				if(nbCartes > 1) {
-					if(combo[0] < 2) {
-						combo[0] = nbCartes;
-					} else {
-						combo[1] = nbCartes;
-					}
-				}
-				if(combo[0] > 1) {
-					score += combo[0] - 1;
-				}
-				if(combo[1] > 1) {
-					score += combo[1] - 1;
-				}
-			}
-			break;
-		}
-		return score;
 	}
 	
 	public static void savePartie(Partie p, String fileName) {
@@ -584,5 +343,11 @@ public class Partie extends Observable implements Serializable {
 		}
 		return p;
 		
+	}
+
+	@Override
+	public int accept(Visitor visitor, int id) {
+		// TODO Auto-generated method stub
+		return visitor.visit(this, id);
 	}
 }

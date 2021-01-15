@@ -53,8 +53,11 @@ public class VueText implements Observer, Runnable{
 			if (saisie.equalsIgnoreCase("C") && partie.getEtat() == "") {
 				//Demander les différentes saisie
 				fr.corentinPierre.models.Configuration config = new Configuration();
-				System.out.println("Mode de jeu de la partie (N : Normal, A : Avancé, R: refill");
-				String modeJeu = this.lireChaine();
+				String modeJeu = "";
+				do {
+					System.out.println("Mode de jeu de la partie (N : Normal, A : Avancé, R: refill");
+					modeJeu = this.lireChaine();
+				} while (!modeJeu.equalsIgnoreCase("N") && !modeJeu.equalsIgnoreCase("A") && !modeJeu.equalsIgnoreCase("R"));
 				config.setTypePartie(modeJeu);
 				System.out.println("Nombre de joueurs de la partie (2 ou 3)");
 				int nbJoueurs = Integer.parseInt(this.lireChaine());
@@ -99,8 +102,12 @@ public class VueText implements Observer, Runnable{
 				}
 				if(partie.getEtat() == "attentePoser" || partie.getEtat() == "erreurPoser") {
 					if(partie.getVariante().getNom().equalsIgnoreCase("Avance")) {
-						System.out.println("Saisissez la carte à poser (entre 0 et 2 inclus)");
-						int x = Integer.parseInt(this.lireChaine());
+						int x = -1;
+						do {
+							System.out.println("Saisissez la carte à poser (entre 0 et 2 inclus)");
+							x = Integer.parseInt(this.lireChaine());
+						} while (x < 0 || x > 2);
+						
 						Carte c = partie.getJoueurs().get(partie.getRound() % partie.getJoueurs().size()).removeCarteFromMainByIndex(x);
 						partie.getVariante().setCarteAPoser(c);
 						partie.setEtat("carteAPoser" + x);
@@ -125,7 +132,11 @@ public class VueText implements Observer, Runnable{
 			} else if(partie.getEtat() == "attentePoser" || partie.getEtat() == "erreurPoser") {
 				if(partie.getVariante().getNom().equalsIgnoreCase("Avance")) {
 					System.out.println("Saisissez la carte à poser (entre 0 et 2 inclus)");
-					int x = Integer.parseInt(this.lireChaine());
+					int x = -1;
+					do {
+						System.out.println("Saisissez la carte à poser (entre 0 et 2 inclus)");
+						x = Integer.parseInt(this.lireChaine());
+					} while (x < 0 || x > 2);
 					Carte c = partie.getJoueurs().get(partie.getRound() % partie.getJoueurs().size()).removeCarteFromMainByIndex(x);
 					partie.getVariante().setCarteAPoser(c);
 					partie.setEtat("carteAPoser" + x);

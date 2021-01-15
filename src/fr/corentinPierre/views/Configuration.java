@@ -19,6 +19,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,8 +39,8 @@ public class Configuration extends JPanel implements Observer {
 	private fr.corentinPierre.models.Configuration config;
 	private Partie partie;
 	
-	JComboBox typePartie;
-	JComboBox nbJoueurs;
+	JComboBox<String> typePartie;
+	JComboBox<String> nbJoueurs;
 	JButton btnStart;
 	JPanel panelJoueur1;
 	JPanel panelJoueur2;
@@ -189,6 +191,44 @@ public class Configuration extends JPanel implements Observer {
 		panel.add(btnRegles);
 		cc.displayRules(btnRegles);
 		config.addObserver(this);
+		
+		//Option
+		checkboxes.get(0).addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(checkboxes.get(0).isSelected()) {
+					inputs.get(0).setEnabled(false);
+				} else {
+					inputs.get(0).setEnabled(true);
+				}
+				
+			}
+		});
+		checkboxes.get(1).addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(checkboxes.get(1).isSelected()) {
+					inputs.get(1).setEnabled(false);
+				} else {
+					inputs.get(1).setEnabled(true);
+				}
+				
+			}
+		});
+		checkboxes.get(2).addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(checkboxes.get(2).isSelected()) {
+					inputs.get(2).setEnabled(false);
+				} else {
+					inputs.get(2).setEnabled(true);
+				}
+				
+			}
+		});
 	}
 
 	@Override

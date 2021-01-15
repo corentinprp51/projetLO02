@@ -1,11 +1,15 @@
 package fr.corentinPierre.views;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 
 import javax.swing.JFrame;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -20,7 +24,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.swing.JButton;
-
+import javax.swing.JDialog;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
@@ -38,6 +42,7 @@ import fr.corentinPierre.models.Variante1;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 public class MonInterface implements Observer {
 
@@ -60,7 +65,12 @@ public class MonInterface implements Observer {
 	private Configuration configurationPanel;
 	private JPanel panel;
 	private Variante2 panelVariante2;
+	private fr.corentinPierre.views.Variante1 panelVariante1;
 	private JButton btnDisplayScore;
+	private JDialog dialog;
+	private JPanel contentPanel;
+	private JButton okButton;
+	private JButton cancelButton;
 
 	/**
 	 * Launch the application.
@@ -92,9 +102,6 @@ public class MonInterface implements Observer {
 		partie.addObserver(this);
 		partie.setEtat(partie.getEtat());
 		ControleurPartie cp = new ControleurPartie(partie);
-		cp.finTour(buttonFinTour);
-		cp.askPoser(buttonPoser);
-		cp.askDeplacer(buttonDeplacer);
 		cp.displayScores(btnDisplayScore);
 		cp.poserCarte(grille);
 	}
@@ -103,14 +110,40 @@ public class MonInterface implements Observer {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		this.initializeSauvegardeDialog();
 		frame = new JFrame();
-		frame.setBounds(100, 100, 796, 442);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setBounds(100, 100, 796, 542);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
 		frame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent windowEvent) {
 				if(partie.getEtat() == "finTour") {
-					Partie.savePartie(partie, "src/save.ser");
+					try {
+						dialog.setVisible(true);
+						okButton.addActionListener(new ActionListener() {
+							
+							@Override
+							public void actionPerformed(ActionEvent arg0) {
+								Partie.savePartie(partie, "src/save.ser");
+								dialog.dispose();
+								System.exit(0);
+							}
+						});
+						cancelButton.addActionListener(new ActionListener() {
+							
+							@Override
+							public void actionPerformed(ActionEvent arg0) {
+								File file = new File("src/save.ser");
+								if(file != null) {
+									file.delete();
+								}
+								System.exit(0);
+							}
+						});
+						
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				} else {
 					File file = new File("src/save.ser");
 					if(file != null) {
@@ -124,7 +157,6 @@ public class MonInterface implements Observer {
 		frame.getContentPane().add(this.configurationPanel);
 		
 		panel = new JPanel();
-		//frame.getContentPane().add(panel);
 		panel.setLayout(new GridLayout(5,3));
 		JButtonCustom button0_4 = new JButtonCustom("",0,4);
 		panel.add(button0_4);
@@ -184,70 +216,6 @@ public class MonInterface implements Observer {
 		JButtonCustom button2_0 = new JButtonCustom("",2,0);
 		panel.add(button2_0);
 		grille.add(button2_0);
-		
-		panel_1 = new JPanel();
-		panel_1.setSize(796, 100);
-		//frame.getContentPane().add(panel_1);
-		panel_1.setLayout(null);
-		
-		buttonPoser = new JButton("Poser Carte");
-		buttonPoser.setBounds(199, 144, 89, 23);
-		buttonPoser.setEnabled(false);
-		panel_1.add(buttonPoser);
-		
-		buttonDeplacer = new JButton("D\u00E9placer Carte");
-		buttonDeplacer.setBounds(300, 144, 105, 23);
-		buttonDeplacer.setEnabled(false);
-		panel_1.add(buttonDeplacer);
-		
-		buttonFinTour = new JButton("Fin Tour");
-		buttonFinTour.setBounds(419, 144, 89, 23);
-		buttonFinTour.setEnabled(false);
-		panel_1.add(buttonFinTour);
-		
-		buttonCartePiochee = new JButton("");
-		buttonCartePiochee.setBounds(0, 38, 114, 129);
-		panel_1.add(buttonCartePiochee);
-		
-		buttonCarteVictoire = new JButton("");
-		buttonCarteVictoire.setBounds(665, 38, 105, 129);
-		panel_1.add(buttonCarteVictoire);
-		
-		JLabel labelCartePiochée = new JLabel("Carte Pioch\u00E9e");
-		labelCartePiochée.setHorizontalAlignment(SwingConstants.CENTER);
-		labelCartePiochée.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		labelCartePiochée.setBounds(0, 11, 114, 23);
-		panel_1.add(labelCartePiochée);
-		
-		JLabel labelCarteVictoire = new JLabel("Carte Victoire");
-		labelCarteVictoire.setHorizontalAlignment(SwingConstants.CENTER);
-		labelCarteVictoire.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		labelCarteVictoire.setBounds(665, 11, 105, 23);
-		panel_1.add(labelCarteVictoire);
-		
-		labelJoueur = new JLabel("");
-		labelJoueur.setHorizontalAlignment(SwingConstants.CENTER);
-		labelJoueur.setFont(new Font("Tahoma", Font.PLAIN, 25));
-		labelJoueur.setBounds(124, 11, 531, 42);
-		panel_1.add(labelJoueur);
-		
-		labelDeck = new JLabel("Deck: /");
-		labelDeck.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		labelDeck.setBounds(362, 48, 56, 23);
-		panel_1.add(labelDeck);
-		
-		labelInfos = new JLabel("Messages d'information ici");
-		labelInfos.setHorizontalAlignment(SwingConstants.CENTER);
-		labelInfos.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		labelInfos.setBounds(124, 95, 531, 38);
-		panel_1.add(labelInfos);
-		
-		
-		labelTour = new JLabel("Tour: /");
-		labelTour.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		labelTour.setBounds(362, 76, 56, 23);
-		panel_1.add(labelTour);
-		
 		
 		panel_2 = new JPanel();
 		panel_2.setSize(796, 100);
@@ -336,6 +304,7 @@ public class MonInterface implements Observer {
 		
 		//Désactivation des boutons de la grille
 		this.setGrilleEnabled(false);
+		panelVariante1 = new fr.corentinPierre.views.Variante1(partie);
 		panelVariante2 = new Variante2(partie);
 		
 		btnDisplayScore = new JButton("R\u00E8gle Score");
@@ -352,20 +321,21 @@ public class MonInterface implements Observer {
 				frame.getContentPane().add(panel);
 				if(partie.getVariante().getNom().equalsIgnoreCase("Avance")) {
 					 frame.getContentPane().add(panelVariante2);
+					 panelVariante1 = null;
 				} else {
 					panelVariante2 = null;
-					frame.getContentPane().add(panel_1);
-					ImageIcon img = this.resizeImage(((Partie) o).getJoueurs().get(0).getCarteVictoire().getImageName(), 100, 100);
-					buttonCarteVictoire.setIcon(img);
-					ImageIcon imgPosee = this.resizeImage(((Partie) o).getCartePiochee().getImageName(), 100, 100);
-					buttonCartePiochee.setIcon(imgPosee);
+					frame.getContentPane().add(panelVariante1);
+					//ImageIcon img = this.resizeImage(((Partie) o).getJoueurs().get(0).getCarteVictoire().getImageName(), 100, 100);
+					//buttonCarteVictoire.setIcon(img);
+					//ImageIcon imgPosee = this.resizeImage(((Partie) o).getCartePiochee().getImageName(), 100, 100);
+					//buttonCartePiochee.setIcon(imgPosee);
 				}
-				buttonPoser.setEnabled(true);
+				//buttonPoser.setEnabled(true);
 				this.setGrilleEnabled(true);
-				this.labelJoueur.setText(((Partie) o).getJoueurs().get(0).getNom());
+				//this.labelJoueur.setText(((Partie) o).getJoueurs().get(0).getNom());
 				//Affichage carte victoire
-				this.labelDeck.setText("Deck: " + (((Partie)o).getDeck().size()));
-				this.labelTour.setText("Tour: " + (((Partie)o).getRound() + 1));
+				//this.labelDeck.setText("Deck: " + (((Partie)o).getDeck().size()));
+				//this.labelTour.setText("Tour: " + (((Partie)o).getRound() + 1));
 				if(this.isJoueurVirtuel()) {
 					JoueurVirtuel jv = this.getJoueurVirtuel();
 					int[] coords = jv.choisirEmplacement();
@@ -375,7 +345,7 @@ public class MonInterface implements Observer {
 						//panelVariante2.clickMain(0);
 					} else {
 						System.out.println("Coordonnées random: " + coords[0] + ", " + coords[1]);
-						buttonPoser.doClick();
+						panelVariante1.clickPoser();
 					}
 					
 					this.findButton(coords[0], coords[1]).doClick();
@@ -383,10 +353,10 @@ public class MonInterface implements Observer {
 				break;
 			} 
 			case "attentePoser": {
-				buttonDeplacer.setEnabled(false);
-				buttonFinTour.setEnabled(false);
-				buttonPoser.setEnabled(false);
-				labelInfos.setText("Poser la carte");
+				//buttonDeplacer.setEnabled(false);
+				//buttonFinTour.setEnabled(false);
+				//buttonPoser.setEnabled(false);
+				//labelInfos.setText("Poser la carte");
 				if(this.isJoueurVirtuel()) {
 					JoueurVirtuel jv = this.getJoueurVirtuel();
 					int[] coords = jv.choisirEmplacement();
@@ -399,10 +369,10 @@ public class MonInterface implements Observer {
 				break;
 			}
 			case "attenteDeplacer": {
-				buttonDeplacer.setEnabled(false);
-				buttonFinTour.setEnabled(false);
-				buttonPoser.setEnabled(false);
-				labelInfos.setText("Déplacer une carte");
+				//buttonDeplacer.setEnabled(false);
+				//buttonFinTour.setEnabled(false);
+				//buttonPoser.setEnabled(false);
+				//labelInfos.setText("Déplacer une carte");
 				break;
 			}
 			case "finTour": {
@@ -412,30 +382,30 @@ public class MonInterface implements Observer {
 					this.setGrilleEnabled(true);
 					this.retablirGrille();
 					if(partie.getVariante().getNom().equalsIgnoreCase("Normal") || partie.getVariante().getNom().equalsIgnoreCase("Refill")) {
-						frame.getContentPane().add(panel_1);
+						frame.getContentPane().add(panelVariante1); //TEST
 					} else {
 						frame.getContentPane().add(panelVariante2);
 					}
 				}
 				if(this.partie.getVariante().getNom().equalsIgnoreCase("Normal") || partie.getVariante().getNom().equalsIgnoreCase("Refill")) {
-					labelInfos.setText("");
-					buttonPoser.setEnabled(true);
-					if(partie.getRound() > 1) {
-						buttonDeplacer.setEnabled(true);
-					}
-						buttonFinTour.setEnabled(false);
-						int idJoueur = ((Partie) o).getRound()%((Partie)o).getJoueurs().size();
+					//labelInfos.setText("");
+					//buttonPoser.setEnabled(true);
+					//if(partie.getRound() > 1) {
+					//	buttonDeplacer.setEnabled(true);
+					//}
+						//buttonFinTour.setEnabled(false);
+						/*int idJoueur = ((Partie) o).getRound()%((Partie)o).getJoueurs().size();
 						this.labelTour.setText("Tour: " + (((Partie) o).getRound() + 1));
 						this.labelJoueur.setText(((Partie) o).getJoueurs().get(idJoueur).getNom());
 						//Affichage carte victoire
 						ImageIcon img = this.resizeImage(((Partie) o).getJoueurs().get(idJoueur).getCarteVictoire().getImageName(), 100, 100);
 						buttonCarteVictoire.setIcon(img);
 						ImageIcon imgPosee = this.resizeImage(((Partie) o).getCartePiochee().getImageName(), 100, 100);
-						buttonCartePiochee.setIcon(imgPosee);
-						this.labelDeck.setText("Deck: " + (((Partie)o).getDeck().size()));
-					if(this.isJoueurVirtuel()) {
-						buttonPoser.doClick();
-					}
+						buttonCartePiochee.setIcon(imgPosee);*/
+						//this.labelDeck.setText("Deck: " + (((Partie)o).getDeck().size()));
+					//if(this.isJoueurVirtuel()) {
+					//	buttonPoser.doClick();
+					//}
 					//System.out.println(((Partie) o).getDeck().size());
 				}
 				
@@ -443,7 +413,7 @@ public class MonInterface implements Observer {
 				
 			}
 			case "erreurPoser": {
-				labelInfos.setText("Re-posez votre carte à un autre endroit");
+				//labelInfos.setText("Re-posez votre carte à un autre endroit");
 				if(this.isJoueurVirtuel()) {
 					JoueurVirtuel jv = this.getJoueurVirtuel();
 					int[] coords = jv.choisirEmplacement();
@@ -457,22 +427,22 @@ public class MonInterface implements Observer {
 			}
 			
 			case "erreurChoixDeplacer": {
-				labelInfos.setText("Re-choisir votre carte à déplacer");
+				//labelInfos.setText("Re-choisir votre carte à déplacer");
 			}
 			
 			case "impossiblePoser": {
-				labelInfos.setText("Action impossible");
+				//labelInfos.setText("Action impossible");
 				break;
 			}
 			case "finPartie": {
-				labelInfos.setText("Fin de la partie");
-				buttonPoser.setEnabled(false);
-				buttonFinTour.setEnabled(false);
-				buttonDeplacer.setEnabled(false);
-				if(partie.getVariante().getNom() == "Avance") {
+				//labelInfos.setText("Fin de la partie");
+				//buttonPoser.setEnabled(false);
+				//buttonFinTour.setEnabled(false);
+				//buttonDeplacer.setEnabled(false);
+				if(partie.getVariante().getNom().equalsIgnoreCase("Avance")) {
 					frame.getContentPane().remove(panelVariante2);
 				} else {
-					frame.getContentPane().remove(panel_1);
+					frame.getContentPane().remove(panelVariante1);
 				}
 				
 				frame.getContentPane().add(panel_2);
@@ -506,16 +476,16 @@ public class MonInterface implements Observer {
 				x = Character.getNumericValue(((Partie) o).getEtat().charAt(((Partie) o).getEtat().length() - 2));
 				y = Character.getNumericValue(((Partie) o).getEtat().charAt(((Partie) o).getEtat().length() - 1));
 				ImageIcon imgPosee = this.resizeImage(((Partie) o).getPlateau().getCartesPosees().get(y).get(x).getImageName(), 100, 100);
-				buttonCartePiochee.setIcon(null);
+				//buttonCartePiochee.setIcon(null);
 				this.findButton(x, y).setIcon(imgPosee);
-				labelInfos.setText("Carte posée");
-				buttonFinTour.setEnabled(true);
-				if(this.isJoueurVirtuel()) {
-					buttonFinTour.doClick();
-				}
-				if(partie.getRound() != 0 && !partie.getAlreadyDeplacee()) {
-					buttonDeplacer.setEnabled(true);
-				} 
+				//labelInfos.setText("Carte posée");
+				//buttonFinTour.setEnabled(true);
+				//if(this.isJoueurVirtuel()) {
+					//buttonFinTour.doClick();
+				//}
+				//if(partie.getRound() != 0 && !partie.getAlreadyDeplacee() && !partie.getPlateau().isFull()) {
+					//buttonDeplacer.setEnabled(true);
+				//} 
 			} else if (((Partie) o).getEtat().indexOf("deplacerCarte") != -1) {
 				int x, y;
 				x = Character.getNumericValue(((Partie) o).getEtat().charAt(((Partie) o).getEtat().length() - 2));
@@ -523,13 +493,13 @@ public class MonInterface implements Observer {
 				Carte c = partie.getPlateau().getCartesPosees().get(y).get(x);
 				ImageIcon imgPosee = this.resizeImage(c.getImageName(), 100, 100);
 				this.findButton(x, y).setIcon(imgPosee);
-				labelInfos.setText("Carte déplacée");
-				if(partie.getCartePiochee() == null) {
-					buttonFinTour.setEnabled(true);
-				} else {
-					buttonPoser.setEnabled(true);
-				}
-				buttonDeplacer.setEnabled(false);
+				//labelInfos.setText("Carte déplacée");
+				//if(partie.getCartePiochee() == null) {
+					//buttonFinTour.setEnabled(true);
+				//} else {
+					//buttonPoser.setEnabled(true);
+				//}
+				//buttonDeplacer.setEnabled(false);
 			} else if (((Partie) o).getEtat().indexOf("carteADeplacer") != -1) {
 				//Supprimer l'image correspondant à la carte choisie
 				int x, y;
@@ -579,6 +549,40 @@ public class MonInterface implements Observer {
 				this.findButton(entry2.getKey(), entry.getKey()).setIcon(this.resizeImage(entry2.getValue().getImageName(), 100, 100));
 			}
 		}
+	}
+	
+	private void initializeSauvegardeDialog() {
+		//Création du JDialog de Sauvegarde
+				dialog = new JDialog();
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setBounds(100, 100, 450, 300);
+				dialog.getContentPane().setLayout(new BorderLayout());
+				contentPanel = new JPanel();
+				contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+				dialog.getContentPane().add(contentPanel, BorderLayout.CENTER);
+				contentPanel.setLayout(null);
+				
+				JLabel lblNewLabel = new JLabel("Sauvegarder la partie ?");
+				lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 30));
+				lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+				lblNewLabel.setBounds(10, 67, 414, 93);
+				contentPanel.add(lblNewLabel);
+				{
+					JPanel buttonPane = new JPanel();
+					buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+					dialog.getContentPane().add(buttonPane, BorderLayout.SOUTH);
+					{
+						okButton = new JButton("Oui");
+						okButton.setActionCommand("Oui");
+						buttonPane.add(okButton);
+						dialog.getRootPane().setDefaultButton(okButton);
+					}
+					{
+						cancelButton = new JButton("Non");
+						cancelButton.setActionCommand("Non");
+						buttonPane.add(cancelButton);
+					}
+				}	
 	}
 	
 }
