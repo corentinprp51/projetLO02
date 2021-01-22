@@ -13,6 +13,7 @@ import fr.corentinPierre.enums.Forme;
  */
 public class Carte implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
 	private Forme forme;
 	private Couleur couleur;
 	private Boolean fillable;

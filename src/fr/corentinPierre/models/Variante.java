@@ -3,6 +3,7 @@ package fr.corentinPierre.models;
 import java.io.Serializable;
 
 public abstract class Variante implements Serializable{
+	private static final long serialVersionUID = 1L;
 	protected String nom;
 	protected Partie partie;
 	public Variante(String nom, Partie p) {
@@ -19,8 +20,7 @@ public abstract class Variante implements Serializable{
 	}
 	
 	abstract public void initialisation();
-
-	public abstract void setCarteAPoser(Carte c);
+	abstract public void setCarteAPoser(Carte c);
 	abstract public Carte getCarteAPoser();
 	abstract public Carte piocher();
 	

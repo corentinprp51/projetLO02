@@ -14,7 +14,6 @@ import fr.corentinPierre.models.JoueurVirtuelDebutant;
 import fr.corentinPierre.models.Partie;
 import fr.corentinPierre.models.Variante1;
 import fr.corentinPierre.models.Variante2;
-import fr.corentinPierre.models.Variante3;
 /**
  * Classe VueText
  * TEST COMMIT OHO
@@ -51,7 +50,6 @@ public class VueText implements Observer, Runnable{
 			System.out.println(this.messageConsole());
 			saisie = this.lireChaine();
 			if (saisie.equalsIgnoreCase("C") && partie.getEtat() == "") {
-				//Demander les différentes saisie
 				fr.corentinPierre.models.Configuration config = new Configuration();
 				String modeJeu = "";
 				do {
@@ -76,7 +74,6 @@ public class VueText implements Observer, Runnable{
 					}
 					config.addJoueur(isVirtuel ? new JoueurVirtuelDebutant(i, "Joueur 0" + i+1) : new JoueurHumain(i, nomJ));
 				}
-				//Start de la partie 
 				config.getJoueurs().forEach(joueur -> {
 					partie.ajouterJoueur(joueur);
 				});
@@ -95,8 +92,6 @@ public class VueText implements Observer, Runnable{
 					Variante1 v = new Variante1("Refill", partie);
 					partie.setVariante(v);
 				}
-				default:
-					//throw new IllegalArgumentException("Unexpected value: " + config.getTypePartie());
 				}
 				partie.initialisation();
 			} else if (partie.getRound() == 0 && (partie.getEtat() == "initialisation" || partie.getEtat() == "attentePoser" || partie.getEtat() == "erreurPoser")) {
@@ -127,10 +122,8 @@ public class VueText implements Observer, Runnable{
 					
 				}
 			} else if (saisie.equalsIgnoreCase(VueText.POSER) && !partie.getEtat().equalsIgnoreCase("attentePoser") && partie.getRound() != 0) {
-				//Déplacer une carte
 				partie.setEtat("attentePoser");
 			} else if (saisie.equalsIgnoreCase(VueText.DEPLACER) && !partie.getEtat().equalsIgnoreCase("attentePoser") && partie.getRound() != 0) {
-				//Déplacer une carte
 				partie.setEtat("attenteDeplacer");
 			} else if(partie.getEtat() == "attentePoser" || partie.getEtat() == "erreurPoser") {
 				if(partie.getVariante().getNom().equalsIgnoreCase("Avance")) {
@@ -198,7 +191,6 @@ public class VueText implements Observer, Runnable{
 					} else {
 						partie.calculerScore();
 					}
-					//System.out.println(partie);
 				} else {
 					if(partie.getPlateau().isFull()) {
 						partie.calculerScore();
@@ -231,21 +223,32 @@ public class VueText implements Observer, Runnable{
 	//Méthodes pour le lancement de la partie
 	
 	private String messageConsole() {
+		String msg = "";
 		if(partie.getEtat() == "") {
-			return VueText.START + " pour configurer la partie !";
+			msg = VueText.START + " pour configurer la partie !";
 		} else if(partie.getEtat() == "initialisation") {
-			return VueText.POSER + " pour poser une carte !";
-		} else if (partie.getEtat() == "attentePoser") {
-			return "Sélectionnez les coordonnées de la carte à poser";
+			msg = VueText.POSER + " pour poser une carte !";
+		} else if (partie.getEtat() == "attentePoser" || partie.getEtat() == "erreurPoser") {
+			msg = "Sélectionnez les coordonnées de la carte à poser";
+		}else if (partie.getEtat() == "attenteDeplacer" || partie.getEtat() == "erreurChoixDeplacer") {
+			msg = "Sélectionnez les coordonnées de la carte à déplacer";
 		}else if(partie.getEtat().indexOf("poser") != -1){
-			return VueText.FINTOUR + " pour terminer son tour";
+			msg = VueText.FINTOUR + " pour terminer son tour";
 		}
-		return "";
+		else if(partie.getEtat().indexOf("poser") != -1){
+			msg = VueText.FINTOUR + " pour terminer son tour";
+		} else if (partie.getEtat() == "finTour") {
+			if(partie.getRound() > 1) {
+				msg = VueText.POSER + " pour poser une carte / " + VueText.DEPLACER + " pour déplacer une carte";
+			} else {
+				msg = VueText.POSER + " pour poser une carte !";
+			}
+		}
+		return msg;
 	}
 
 	@Override
 	public void update(Observable o, Object arg1) {
-		// Lorsque l'état de la partie est modifié
 		if(o instanceof Partie) {
 			switch (((Partie) o).getEtat()) {
 			case "initialisation" : {
@@ -302,8 +305,6 @@ public class VueText implements Observer, Runnable{
 				});
 				break;
 			}
-			default:
-				//throw new IllegalArgumentException("Unexpected value: " + ((Partie) o).getEtat());
 			}
 			if(((Partie) o).getEtat().indexOf("poser") != -1) {
 				//Alors on récupère les coordonnées
@@ -318,7 +319,6 @@ public class VueText implements Observer, Runnable{
 				int x, y;
 				x = Character.getNumericValue(((Partie) o).getEtat().charAt(((Partie) o).getEtat().length() - 2));
 				y = Character.getNumericValue(((Partie) o).getEtat().charAt(((Partie) o).getEtat().length() - 1));
-				//Carte c = partie.getPlateau().getCartesPosees().get(y).get(x);
 				System.out.println("Carte déplacée en " + x + ", " + y);
 			}
 			else if (((Partie) o).getEtat().indexOf("carteAPoser") != -1) {

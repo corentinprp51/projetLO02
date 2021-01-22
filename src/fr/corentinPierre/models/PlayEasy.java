@@ -5,6 +5,8 @@ import java.util.Random;
 
 public class PlayEasy implements ModeJeuStrategy, Serializable{
 
+	private static final long serialVersionUID = 1L;
+
 	public int[] placement() {
 		Random rX = new Random();
 		int low = 0;
@@ -18,13 +20,6 @@ public class PlayEasy implements ModeJeuStrategy, Serializable{
 		tab[0] = resultX;
 		tab[1] = resultY;
 		return tab;
-	}
-	public String action() {
-		return "P";
-	}
-	
-	public boolean demanderPoserCarte() {
-		return false;
 	}
 
 }

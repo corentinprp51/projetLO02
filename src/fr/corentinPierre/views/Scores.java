@@ -21,18 +21,6 @@ public class Scores extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			Scores dialog = new Scores();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * Create the dialog.
@@ -50,7 +38,7 @@ public class Scores extends JDialog {
 			contentPanel.add(lblNewLabel);
 			BufferedImage img = null;
 			try {
-				img = ImageIO.read(this.getClass().getResource("score.PNG"));
+				img = ImageIO.read(this.getClass().getResource("/score.PNG"));
 			} catch (IOException e) {
 			    e.printStackTrace();
 			}

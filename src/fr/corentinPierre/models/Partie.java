@@ -56,9 +56,6 @@ public class Partie extends Observable implements Serializable, Visitable {
 		return this.loaded;
 	}
 	
-	/**
-	 * Générer toutes les cartes et effectuer le mélange
-	 */
 	public void melangerCartes() {
 		for(int j = 0; j < Forme.values().length; j++) {
 			for (int k = 0; k < Couleur.values().length; k++) {
@@ -100,10 +97,8 @@ public class Partie extends Observable implements Serializable, Visitable {
 	}
 	
 	public void nouveauRound() {
-		//System.out.println("Fin du tour...");
 		if(this.getVariante().getNom().equalsIgnoreCase("Refill")) {
 			if(this.getPlateau().getNbCartesPosees() == 7) {
-				//On refill le packet et on mélange
 				LinkedList<Carte> refill = new LinkedList<Carte>();
 				for(int j = 0; j < Forme.values().length; j++) {
 					for (int k = 0; k < Couleur.values().length; k++) {
@@ -172,7 +167,7 @@ public class Partie extends Observable implements Serializable, Visitable {
 		return vainqueur;
 	}
 	
-	protected void retirercarteCachee() {
+	protected void retirerCarteCachee() {
 		Random rand = new Random();
 		int randIndex = rand.nextInt(this.deck.size());
 		this.carteSupp = this.deck.get(randIndex);
@@ -181,7 +176,6 @@ public class Partie extends Observable implements Serializable, Visitable {
 	
 	public String toString() {
 		StringBuffer bf = new StringBuffer();
-		//bf.append("\nPartie " + this.getNom());
 		bf.append("\nPartie ");
 		bf.append("\nNombre de cartes restant: " + this.deck.size());
 		bf.append("\nJoueurs");
@@ -202,7 +196,6 @@ public class Partie extends Observable implements Serializable, Visitable {
 	public boolean poserCarte(int x, int y) {
 		int [] coordonnees = {x,y};
 		if(this.round == 0) {
-			//System.out.println(j.getNom() + " pioche" + c);
 			if(this.getVariante().getNom().equalsIgnoreCase("Avance")) {
 				this.getPlateau().setCartesPosees(coordonnees[0], coordonnees[1], this.getVariante().getCarteAPoser());
 				this.getVariante().setCarteAPoser(null);
@@ -211,15 +204,10 @@ public class Partie extends Observable implements Serializable, Visitable {
 			}
 		} else {
 			if(this.getPlateau().getCartesPosees().containsKey(coordonnees[1]) && this.getPlateau().getCartesPosees().get(coordonnees[1]).containsKey(coordonnees[0])) {
-				//System.out.println("Il y a déjà une carte en: " + coordonnees[0] + ", " + coordonnees[1]);
 				return false;
 			} else if (!this.getPlateau().checkAdjacence(coordonnees[0], coordonnees[1])) {
-				//System.out.println("Impossible de placer votre carte en " + coordonnees[0] + ", " + coordonnees[1]);
-				//System.out.println("La règle d'adjacence n'est pas respectée");
 				return false;
 			} else if (!this.getPlateau().checkBaseRule(coordonnees[0], coordonnees[1])) {
-				//System.out.println("Impossible de placer votre carte en " + coordonnees[0] + ", " + coordonnees[1]);
-				//System.out.println("La règle de base n'est pas respectée");
 				return false;
 			}
 			if(this.getVariante().getNom().equalsIgnoreCase("Avance")) {
@@ -229,7 +217,6 @@ public class Partie extends Observable implements Serializable, Visitable {
 				this.getPlateau().setCartesPosees(coordonnees[0], coordonnees[1], this.cartePiochee);
 			}
 		}
-		//System.out.println("Placement de la carte en " + coordonnees[0] + "," + coordonnees[1]);
 		this.cartePiochee = null;
 		this.etat = "poser" + coordonnees[0] + coordonnees[1];
 		this.setChanged();
@@ -252,21 +239,14 @@ public class Partie extends Observable implements Serializable, Visitable {
 	}
 
 	public boolean deplacerCarte(Carte carte, int x, int y) {
-		//System.out.println("Carte à déplacer: " + carte);
 		int [] newCoordonnees = {x,y};
 			if(this.getPlateau().getCartesPosees().containsKey(newCoordonnees[1]) && this.getPlateau().getCartesPosees().get(newCoordonnees[1]).containsKey(newCoordonnees[0])) {
-				//System.out.println("Il y a déjà une carte en: " + newCoordonnees[0] + ", " + newCoordonnees[1]);
 				return false;
 			} else if (!this.getPlateau().checkAdjacence(newCoordonnees[0], newCoordonnees[1])) {
-				//System.out.println("Impossible de placer votre carte en " + newCoordonnees[0] + ", " + newCoordonnees[1]);
-				//System.out.println("La règle d'adjacence n'est pas respectée");
 				return false;
 			} else if (!this.getPlateau().checkBaseRule(newCoordonnees[0], newCoordonnees[1])) {
-				//System.out.println("Impossible de placer votre carte en " + newCoordonnees[0] + ", " + newCoordonnees[1]);
-				//System.out.println("La règle de base n'est pas respectée");
 				return false;
 			}
-		//System.out.println("Déplacement de la carte en " + newCoordonnees[0] + ", " + newCoordonnees[1]);
 		this.getPlateau().setCartesPosees(newCoordonnees[0], newCoordonnees[1], carte);
 		this.alreadyDeplacee = true;
 		this.etat = "deplacerCarte" + newCoordonnees[0] + newCoordonnees[1];
@@ -291,9 +271,6 @@ public class Partie extends Observable implements Serializable, Visitable {
 	
 	public void calculerScore() {
 		for(int i = 0; i<this.joueurs.size(); i++) {
-			/*int scoreForme = this.calculerForme(this.joueurs.get(i).getCarteVictoire());
-			int scoreCouleur = this.calculerCouleur(this.joueurs.get(i).getCarteVictoire());
-			int scoreFillable = this.calculerFillable(this.joueurs.get(i).getCarteVictoire());*/
 			this.joueurs.get(i).setScore(this.accept(new ScoreVisitor(), i));
 		}
 		this.setEtat("finPartie");
@@ -306,14 +283,10 @@ public class Partie extends Observable implements Serializable, Visitable {
 			oos.writeObject(p);
 			fos.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
 	}
 	
 	public void setLoaded(boolean l) {
@@ -329,17 +302,11 @@ public class Partie extends Observable implements Serializable, Visitable {
 			p.setLoaded(true);
 			fis.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			System.out.println("Pas de dernière sauvegarde de parties");
-			//e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			System.out.println("Pas de dernière sauvegarde de parties");
-			//e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			System.out.println("Pas de dernière sauvegarde de parties");
-			//e.printStackTrace();
 		}
 		return p;
 		
@@ -347,7 +314,7 @@ public class Partie extends Observable implements Serializable, Visitable {
 
 	@Override
 	public int accept(Visitor visitor, int id) {
-		// TODO Auto-generated method stub
 		return visitor.visit(this, id);
 	}
+	
 }

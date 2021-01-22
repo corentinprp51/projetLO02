@@ -8,39 +8,29 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 
 import fr.corentinPierre.models.Carte;
-import fr.corentinPierre.models.JoueurHumain;
-import fr.corentinPierre.models.JoueurVirtuel;
-import fr.corentinPierre.models.JoueurVirtuelDebutant;
 import fr.corentinPierre.models.Partie;
-import fr.corentinPierre.models.Variante2;
 import fr.corentinPierre.views.JButtonCustom;
 import fr.corentinPierre.views.JButtonIndex;
 import fr.corentinPierre.views.Scores;
 
 
+/**
+ * Contrôleur responsable du déroulement de la partie. 
+ * Permet de gérer l'interface graphique d'une partie.
+ * Il fait le lien entre les objets du modèle et la vue. 
+ * 
+ * @author Corentin Parpette
+ * @author Pierre Treuchot
+ * 
+ * @see fr.corentinPierre.views.MonInterface
+ * @see fr.corentinPierre.models.Partie
+ *
+ */
+
 public class ControleurPartie {
 	private Partie partie;
 	public ControleurPartie( final Partie partie) {
 		this.partie = partie;
-	}
-	
-	public void startEvent(JButton btn) {
-		btn.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				JoueurHumain p1 = new JoueurHumain(0, "Corentin");
-				JoueurHumain p2 = new JoueurHumain(1, "Pierre");
-				JoueurHumain p3 = new JoueurHumain(2, "Dorian");
-				JoueurVirtuel v1 = new JoueurVirtuelDebutant(0, "Virtuel 1");
-				JoueurVirtuel v2 = new JoueurVirtuelDebutant(1, "Virtuel 2");
-				JoueurVirtuel v3 = new JoueurVirtuelDebutant(2, "Virtuel 3");
-				partie.ajouterJoueur(p1);
-				partie.ajouterJoueur(v1);
-				//partie.ajouterJoueur(p3);
-				partie.initialisation();
-				btn.setEnabled(false);
-				//System.out.println(partie);
-			}
-		});
 	}
 	
 	public void finTour(JButton btn) {
@@ -68,7 +58,6 @@ public class ControleurPartie {
 					} else {
 						partie.calculerScore();
 					}
-					//System.out.println(partie);
 				} else {
 					if(partie.getPlateau().isFull()) {
 						partie.calculerScore();
@@ -113,9 +102,7 @@ public class ControleurPartie {
 								partie.setEtat("erreurPoser");
 							}
 					} else if(partie.getEtat() == "attenteDeplacer" || partie.getEtat() == "erreurChoixDeplacer") {
-						//Choix d'une carte à déplacer
 						Carte c = partie.prendreCarteADeplacer(btn.getXGrille(), btn.getYGrille());
-						//btn.setIcon(null);
 						if(c == null) {
 							partie.setEtat("erreurChoixDeplacer");
 						}
@@ -139,7 +126,6 @@ public class ControleurPartie {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					if(partie.getVariante().getNom().equalsIgnoreCase("Avance")) {
-						//btn.setIcon(null);
 						Carte c = partie.getJoueurs().get(partie.getRound() % partie.getJoueurs().size()).removeCarteFromMainByIndex(btn.getIndex());
 						partie.getVariante().setCarteAPoser(c);
 						partie.setEtat("carteAPoser" + btn.getIndex());

@@ -15,6 +15,8 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Observable;
@@ -48,17 +50,7 @@ public class MonInterface implements Observer {
 
 	private JFrame frame;
 	private Partie partie;
-	private JLabel labelJoueur;
-	private JLabel labelTour;
-	private JLabel labelDeck;
-	private JButton buttonCarteVictoire;
-	private JButton buttonFinTour;
-	private JButton buttonPoser;
-	private JButton buttonCartePiochee;
-	private JLabel labelInfos;
-	private JButton buttonDeplacer;
 	private ArrayList<JButtonCustom> grille;
-	private JPanel panel_1;
 	private JPanel panel_2;
 	private ArrayList<JPanel> scores;
 	private JLabel lblVainqueur;
@@ -145,16 +137,17 @@ public class MonInterface implements Observer {
 						e.printStackTrace();
 					}
 				} else if(partie.getEtat().equalsIgnoreCase("finPartie") || partie.getEtat().equalsIgnoreCase("")) {
-					File file = new File("src/save.ser");
+					File file = new File("save.ser");
 					if(file != null) {
 						file.delete();
 					}
 					System.exit(0);
 				} else {
-					File file = new File("src/save.ser");
+					File file = new File("save.ser");
 					if(file != null) {
 						file.delete();
 					}
+					System.exit(0);
 				}
 			}
 		});
@@ -310,6 +303,7 @@ public class MonInterface implements Observer {
 		
 		//Désactivation des boutons de la grille
 		this.setGrilleEnabled(false);
+		
 		panelVariante1 = new fr.corentinPierre.views.Variante1(partie);
 		panelVariante2 = new Variante2(partie);
 		
@@ -331,24 +325,14 @@ public class MonInterface implements Observer {
 				} else {
 					panelVariante2 = null;
 					frame.getContentPane().add(panelVariante1);
-					//ImageIcon img = this.resizeImage(((Partie) o).getJoueurs().get(0).getCarteVictoire().getImageName(), 100, 100);
-					//buttonCarteVictoire.setIcon(img);
-					//ImageIcon imgPosee = this.resizeImage(((Partie) o).getCartePiochee().getImageName(), 100, 100);
-					//buttonCartePiochee.setIcon(imgPosee);
 				}
-				//buttonPoser.setEnabled(true);
 				this.setGrilleEnabled(true);
-				//this.labelJoueur.setText(((Partie) o).getJoueurs().get(0).getNom());
-				//Affichage carte victoire
-				//this.labelDeck.setText("Deck: " + (((Partie)o).getDeck().size()));
-				//this.labelTour.setText("Tour: " + (((Partie)o).getRound() + 1));
 				if(this.isJoueurVirtuel()) {
 					JoueurVirtuel jv = this.getJoueurVirtuel();
 					int[] coords = jv.choisirEmplacement();
 					if(partie.getVariante().getNom().equalsIgnoreCase("Avance")) {
 						int idJoueur = ((Partie) o).getRound()%((Partie)o).getJoueurs().size();
 						panelVariante2.clickPoser();
-						//panelVariante2.clickMain(0);
 					} else {
 						System.out.println("Coordonnées random: " + coords[0] + ", " + coords[1]);
 						panelVariante1.clickPoser();
@@ -359,10 +343,6 @@ public class MonInterface implements Observer {
 				break;
 			} 
 			case "attentePoser": {
-				//buttonDeplacer.setEnabled(false);
-				//buttonFinTour.setEnabled(false);
-				//buttonPoser.setEnabled(false);
-				//labelInfos.setText("Poser la carte");
 				if(this.isJoueurVirtuel()) {
 					JoueurVirtuel jv = this.getJoueurVirtuel();
 					int[] coords = jv.choisirEmplacement();
@@ -374,13 +354,6 @@ public class MonInterface implements Observer {
 				}
 				break;
 			}
-			case "attenteDeplacer": {
-				//buttonDeplacer.setEnabled(false);
-				//buttonFinTour.setEnabled(false);
-				//buttonPoser.setEnabled(false);
-				//labelInfos.setText("Déplacer une carte");
-				break;
-			}
 			case "finTour": {
 				if(partie.getLoaded()) {
 					frame.getContentPane().remove(configurationPanel);
@@ -388,38 +361,16 @@ public class MonInterface implements Observer {
 					this.setGrilleEnabled(true);
 					this.retablirGrille();
 					if(partie.getVariante().getNom().equalsIgnoreCase("Normal") || partie.getVariante().getNom().equalsIgnoreCase("Refill")) {
-						frame.getContentPane().add(panelVariante1); //TEST
+						frame.getContentPane().add(panelVariante1);
 					} else {
 						frame.getContentPane().add(panelVariante2);
 					}
-				}
-				if(this.partie.getVariante().getNom().equalsIgnoreCase("Normal") || partie.getVariante().getNom().equalsIgnoreCase("Refill")) {
-					//labelInfos.setText("");
-					//buttonPoser.setEnabled(true);
-					//if(partie.getRound() > 1) {
-					//	buttonDeplacer.setEnabled(true);
-					//}
-						//buttonFinTour.setEnabled(false);
-						/*int idJoueur = ((Partie) o).getRound()%((Partie)o).getJoueurs().size();
-						this.labelTour.setText("Tour: " + (((Partie) o).getRound() + 1));
-						this.labelJoueur.setText(((Partie) o).getJoueurs().get(idJoueur).getNom());
-						//Affichage carte victoire
-						ImageIcon img = this.resizeImage(((Partie) o).getJoueurs().get(idJoueur).getCarteVictoire().getImageName(), 100, 100);
-						buttonCarteVictoire.setIcon(img);
-						ImageIcon imgPosee = this.resizeImage(((Partie) o).getCartePiochee().getImageName(), 100, 100);
-						buttonCartePiochee.setIcon(imgPosee);*/
-						//this.labelDeck.setText("Deck: " + (((Partie)o).getDeck().size()));
-					//if(this.isJoueurVirtuel()) {
-					//	buttonPoser.doClick();
-					//}
-					//System.out.println(((Partie) o).getDeck().size());
 				}
 				
 				break;
 				
 			}
 			case "erreurPoser": {
-				//labelInfos.setText("Re-posez votre carte à un autre endroit");
 				if(this.isJoueurVirtuel()) {
 					JoueurVirtuel jv = this.getJoueurVirtuel();
 					int[] coords = jv.choisirEmplacement();
@@ -431,20 +382,7 @@ public class MonInterface implements Observer {
 				}
 				break;
 			}
-			
-			case "erreurChoixDeplacer": {
-				//labelInfos.setText("Re-choisir votre carte à déplacer");
-			}
-			
-			case "impossiblePoser": {
-				//labelInfos.setText("Action impossible");
-				break;
-			}
 			case "finPartie": {
-				//labelInfos.setText("Fin de la partie");
-				//buttonPoser.setEnabled(false);
-				//buttonFinTour.setEnabled(false);
-				//buttonDeplacer.setEnabled(false);
 				if(partie.getVariante().getNom().equalsIgnoreCase("Avance")) {
 					frame.getContentPane().remove(panelVariante2);
 				} else {
@@ -453,7 +391,7 @@ public class MonInterface implements Observer {
 				
 				frame.getContentPane().add(panel_2);
 				//Affichage du vainqueur
-				lblVainqueur.setText("<html><div style='text-align: center;'>Vainqueur: "+ ((Partie)o).getVainqueur().getNom() + "</div></html>");
+				lblVainqueur.setText("Vainqueur: " + ((Partie)o).getVainqueur().getNom());
 				for(int i = 0; i < partie.getJoueurs().size(); i++) {
 					this.scores.get(i).setEnabled(true);
 					Component[] components = this.scores.get(i).getComponents();
@@ -472,26 +410,13 @@ public class MonInterface implements Observer {
 				
 				break;
 			}
-			default:
-				//throw new IllegalArgumentException("Unexpected value: " + ((Partie) o).getEtat());
-			}
-			//System.out.println(((Partie) o).getEtat());
+		}
 			if(((Partie) o).getEtat().indexOf("poser") != -1) {
-				//Alors on récupère les coordonnées
 				int x, y;
 				x = Character.getNumericValue(((Partie) o).getEtat().charAt(((Partie) o).getEtat().length() - 2));
 				y = Character.getNumericValue(((Partie) o).getEtat().charAt(((Partie) o).getEtat().length() - 1));
 				ImageIcon imgPosee = this.resizeImage(((Partie) o).getPlateau().getCartesPosees().get(y).get(x).getImageName(), 100, 100);
-				//buttonCartePiochee.setIcon(null);
 				this.findButton(x, y).setIcon(imgPosee);
-				//labelInfos.setText("Carte posée");
-				//buttonFinTour.setEnabled(true);
-				//if(this.isJoueurVirtuel()) {
-					//buttonFinTour.doClick();
-				//}
-				//if(partie.getRound() != 0 && !partie.getAlreadyDeplacee() && !partie.getPlateau().isFull()) {
-					//buttonDeplacer.setEnabled(true);
-				//} 
 			} else if (((Partie) o).getEtat().indexOf("deplacerCarte") != -1) {
 				int x, y;
 				x = Character.getNumericValue(((Partie) o).getEtat().charAt(((Partie) o).getEtat().length() - 2));
@@ -499,13 +424,6 @@ public class MonInterface implements Observer {
 				Carte c = partie.getPlateau().getCartesPosees().get(y).get(x);
 				ImageIcon imgPosee = this.resizeImage(c.getImageName(), 100, 100);
 				this.findButton(x, y).setIcon(imgPosee);
-				//labelInfos.setText("Carte déplacée");
-				//if(partie.getCartePiochee() == null) {
-					//buttonFinTour.setEnabled(true);
-				//} else {
-					//buttonPoser.setEnabled(true);
-				//}
-				//buttonDeplacer.setEnabled(false);
 			} else if (((Partie) o).getEtat().indexOf("carteADeplacer") != -1) {
 				//Supprimer l'image correspondant à la carte choisie
 				int x, y;
@@ -524,7 +442,7 @@ public class MonInterface implements Observer {
 
 		BufferedImage img = null;
 		try {
-			img = ImageIO.read(this.getClass().getResource(name + ".jpg"));
+			img = ImageIO.read(this.getClass().getResource("/" + name + ".jpg"));
 		} catch (IOException e) {
 		    e.printStackTrace();
 		}

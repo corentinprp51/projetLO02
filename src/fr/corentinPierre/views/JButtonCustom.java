@@ -5,6 +5,7 @@ import javax.swing.JButton;
 
 public class JButtonCustom extends JButton {
 
+	private static final long serialVersionUID = 1L;
 	private int xGrille;
 	private int yGrille;
 	public JButtonCustom (String title, int xGrille, int yGrille) {

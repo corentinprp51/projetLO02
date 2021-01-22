@@ -7,7 +7,6 @@ public class ScoreVisitor implements Visitor{
 
 	@Override
 	public int visit(Partie p, int id) {
-		// TODO Auto-generated method stub
 		int scoreForme = this.calculerForme(p, p.getJoueurs().get(id).getCarteVictoire());
 		int scoreCouleur = this.calculerCouleur(p, p.getJoueurs().get(id).getCarteVictoire());
 		int scoreFillable = this.calculerFillable(p, p.getJoueurs().get(id).getCarteVictoire());
@@ -16,7 +15,6 @@ public class ScoreVisitor implements Visitor{
 	
 	public int calculerFillable(Partie p, Carte victoire) {
 		int score = 0;
-		//Comptage Horizontal
 		Map<Integer, Map<Integer, Carte>> cartes = new TreeMap<Integer, Map<Integer, Carte>>(p.getPlateau().getCartesPosees());	
 		for(Map.Entry<Integer, Map<Integer, Carte>> entry: cartes.entrySet() ) {
 			int nbCartes = 0;
@@ -50,7 +48,6 @@ public class ScoreVisitor implements Visitor{
 				score += combo[1];
 			}
 		}
-		//Comptage Vertical
 		for(Map.Entry<Integer, Map<Integer, Carte>> entry: cartes.entrySet() ) {
 			for(Map.Entry<Integer, Carte> entry2: entry.getValue().entrySet()) {
 				int i = 0;
@@ -62,7 +59,6 @@ public class ScoreVisitor implements Visitor{
 					if(cartes.get(entry.getKey() + i).containsKey(entry2.getKey())) {
 						if(cartes.get(entry.getKey() + i).get(entry2.getKey()).getFillable() == victoire.getFillable()) {
 							nbCartes++;
-							//cartes.get(entry.getKey() + i).remove(entry2.getKey());
 							
 						} else {
 							if(combo[0] <= 1) {
@@ -96,7 +92,6 @@ public class ScoreVisitor implements Visitor{
 	
 	public int calculerCouleur(Partie p, Carte victoire) {
 		int score = 0;
-		//Comptage Horizontal
 		Map<Integer, Map<Integer, Carte>> cartes = new TreeMap<Integer, Map<Integer, Carte>>(p.getPlateau().getCartesPosees());	
 		for(Map.Entry<Integer, Map<Integer, Carte>> entry: cartes.entrySet() ) {
 			int nbCartes = 0;
@@ -130,7 +125,6 @@ public class ScoreVisitor implements Visitor{
 				score += combo[1] + 1;
 			}
 		}
-		//Comptage Vertical
 		for(Map.Entry<Integer, Map<Integer, Carte>> entry: cartes.entrySet() ) {
 			for(Map.Entry<Integer, Carte> entry2: entry.getValue().entrySet()) {
 				int i = 0;
@@ -142,7 +136,6 @@ public class ScoreVisitor implements Visitor{
 					if(cartes.get(entry.getKey() + i).containsKey(entry2.getKey())) {
 						if(cartes.get(entry.getKey() + i).get(entry2.getKey()).getCouleur() == victoire.getCouleur()) {
 							nbCartes++;
-							//cartes.get(entry.getKey() + i).remove(entry2.getKey());
 							
 						} else {
 							if(combo[0] <= 1) {
@@ -175,7 +168,6 @@ public class ScoreVisitor implements Visitor{
 	}
 	public int calculerForme(Partie p, Carte victoire) {
 		int score = 0;
-		//Comptage Horizontal
 		Map<Integer, Map<Integer, Carte>> cartes = new TreeMap<Integer, Map<Integer, Carte>>(p.getPlateau().getCartesPosees());	
 		for(Map.Entry<Integer, Map<Integer, Carte>> entry: cartes.entrySet() ) {
 			int nbCartes = 0;
@@ -209,8 +201,6 @@ public class ScoreVisitor implements Visitor{
 				score += combo[1] - 1;
 			}
 		}
-		//Comptage Vertical
-		//Affichage du tapis final: 
 		for(Map.Entry<Integer, Map<Integer, Carte>> entry: p.getPlateau().getCartesPosees().entrySet() ) {
 			for(Map.Entry<Integer, Carte> entry2: entry.getValue().entrySet()) {
 				int i = 0;
@@ -222,8 +212,6 @@ public class ScoreVisitor implements Visitor{
 					if(cartes.get(entry.getKey() + i).containsKey(entry2.getKey())) {
 						if(cartes.get(entry.getKey() + i).get(entry2.getKey()).getForme() == victoire.getForme()) {
 							nbCartes++;
-							//cartes.get(entry.getKey() + i).remove(entry2.getKey());
-							
 						} else {
 							if(combo[0] <= 1) {
 								combo[0] = nbCartes;
@@ -253,5 +241,6 @@ public class ScoreVisitor implements Visitor{
 		}
 		return score;
 	}
+	
 
 }

@@ -168,17 +168,12 @@ public class Variante1 extends JPanel implements Observer{
 					}
 					case "erreurPoser": {
 						labelInfos.setText("Re-posez votre carte à un autre endroit");
-						//if(this.isJoueurVirtuel()) {
-							//JoueurVirtuel jv = this.getJoueurVirtuel();
-							//int[] coords = jv.choisirEmplacement();
-							//System.out.println("Coordonnées random: " + coords[0] + ", " + coords[1]);
-							//this.findButton(coords[0], coords[1]).doClick();
-						//}
 						break;
 					}
 					
 					case "erreurChoixDeplacer": {
 						labelInfos.setText("Re-choisir votre carte à déplacer");
+						break;
 					}
 					
 					case "impossiblePoser": {
@@ -193,10 +188,7 @@ public class Variante1 extends JPanel implements Observer{
 						
 						break;
 					}
-					default:
-						//throw new IllegalArgumentException("Unexpected value: " + ((Partie) o).getEtat());
 					}
-					//System.out.println(((Partie) o).getEtat());
 					if(((Partie) o).getEtat().indexOf("poser") != -1) {
 						buttonCartePiochee.setIcon(null);
 						labelInfos.setText("Carte posée");
@@ -225,7 +217,7 @@ public class Variante1 extends JPanel implements Observer{
 
 		BufferedImage img = null;
 		try {
-			img = ImageIO.read(this.getClass().getResource(name + ".jpg"));
+			img = ImageIO.read(this.getClass().getResource("/" + name + ".jpg"));
 		} catch (IOException e) {
 		    e.printStackTrace();
 		}

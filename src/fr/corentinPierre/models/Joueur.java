@@ -2,10 +2,10 @@ package fr.corentinPierre.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public abstract class Joueur implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
 	protected int id;
 	protected String nom;
 	protected int score;
@@ -81,13 +81,5 @@ public abstract class Joueur implements Serializable{
 			System.out.println(this.getMain().get(i));
 		}
 	}
-	
-	abstract public int[] choisirEmplacement();
-	abstract public String choisirAction();
-	abstract public boolean demandePoserCarte();
-	
-	
-
-	
 	
 }

@@ -1,14 +1,8 @@
 package fr.corentinPierre.views;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 
 import fr.corentinPierre.controllers.ControleurConfiguration;
-import fr.corentinPierre.controllers.ControleurPartie;
 import fr.corentinPierre.models.Partie;
 
 import javax.swing.JLabel;
@@ -61,9 +55,55 @@ public class Configuration extends JPanel implements Observer {
 		this.partie = p;
 		this.config = c;
 		this.setSize(796, 435);
-		//this.setBorder(new EmptyBorder(5, 5, 5, 5));
 		this.setLayout(null);
+		this.initialize();
+		ControleurConfiguration cc = new ControleurConfiguration(this.config, this.partie);
+		cc.changeNbJoueurs(nbJoueurs);
+		cc.startPartie(btnStart, inputs, checkboxes);
+		cc.changeType(typePartie);
+		cc.displayRules(btnRegles);
+		config.addObserver(this);
 		
+		//Option
+		checkboxes.get(0).addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(checkboxes.get(0).isSelected()) {
+					inputs.get(0).setEnabled(false);
+				} else {
+					inputs.get(0).setEnabled(true);
+				}
+				
+			}
+		});
+		checkboxes.get(1).addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(checkboxes.get(1).isSelected()) {
+					inputs.get(1).setEnabled(false);
+				} else {
+					inputs.get(1).setEnabled(true);
+				}
+				
+			}
+		});
+		checkboxes.get(2).addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(checkboxes.get(2).isSelected()) {
+					inputs.get(2).setEnabled(false);
+				} else {
+					inputs.get(2).setEnabled(true);
+				}
+				
+			}
+		});
+	}
+	
+	private void initialize() {
 		JLabel lblNewLabel = new JLabel("Configuration de la partie");
 		lblNewLabel.setBounds(244, 11, 291, 67);
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 25));
@@ -163,18 +203,13 @@ public class Configuration extends JPanel implements Observer {
 		
 		BufferedImage wPic;
 		try {
-			wPic = ImageIO.read(this.getClass().getResource("logo.PNG"));
+			wPic = ImageIO.read(this.getClass().getResource("/logo.PNG"));
 			wIcon.setIcon(new ImageIcon(wPic));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		
-		//Contrôleur
-		
-		ControleurConfiguration cc = new ControleurConfiguration(this.config, this.partie);
-		cc.changeNbJoueurs(nbJoueurs);
 		inputs = new ArrayList<>();
 		inputs.add(nomJoueur1);
 		inputs.add(nomJoueur2);
@@ -183,76 +218,26 @@ public class Configuration extends JPanel implements Observer {
 		checkboxes.add(virtuel1);
 		checkboxes.add(virtuel2);
 		checkboxes.add(virtuel3);
-		cc.startPartie(btnStart, inputs, checkboxes);
-		cc.changeType(typePartie);
-		
 		btnRegles = new JButton("R\u00E8gles");
 		btnRegles.setBounds(212, 264, 106, 34);
 		panel.add(btnRegles);
-		cc.displayRules(btnRegles);
-		config.addObserver(this);
-		
-		//Option
-		checkboxes.get(0).addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if(checkboxes.get(0).isSelected()) {
-					inputs.get(0).setEnabled(false);
-				} else {
-					inputs.get(0).setEnabled(true);
-				}
-				
-			}
-		});
-		checkboxes.get(1).addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if(checkboxes.get(1).isSelected()) {
-					inputs.get(1).setEnabled(false);
-				} else {
-					inputs.get(1).setEnabled(true);
-				}
-				
-			}
-		});
-		checkboxes.get(2).addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if(checkboxes.get(2).isSelected()) {
-					inputs.get(2).setEnabled(false);
-				} else {
-					inputs.get(2).setEnabled(true);
-				}
-				
-			}
-		});
 	}
 
 	@Override
 	public void update(Observable o, Object arg1) {
 		if(o instanceof fr.corentinPierre.models.Configuration) {
 			switch (((fr.corentinPierre.models.Configuration) o).getEtat()) {
-			case "config.2joueurs": {
-				System.out.println("2 joueurs");
-				panelJoueur3.setVisible(false);
-				break;
-			}
-			case "config.3joueurs": {
-				System.out.println("3 joueurs");
-				panelJoueur3.setVisible(true);
-				break;
-			}
-			
-			case "config.start": {
-				
-			}
-			default:
-				//throw new IllegalArgumentException("Unexpected value: " + ((fr.corentinPierre.models.Configuration) o).getEtat());
-			}
+				case "config.2joueurs": {
+					System.out.println("2 joueurs");
+					panelJoueur3.setVisible(false);
+					break;
+				}
+				case "config.3joueurs": {
+					System.out.println("3 joueurs");
+					panelJoueur3.setVisible(true);
+					break;
+				}
+			}	
 		}
-		
 	}
 }

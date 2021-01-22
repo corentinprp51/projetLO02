@@ -2,17 +2,16 @@ package fr.corentinPierre.models;
 
 public class Variante2 extends Variante {
 
+	private static final long serialVersionUID = 1L;
 	private Carte carteAPoser;
 	public Variante2(String nom, Partie p) {
 		super(nom, p);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public void initialisation() {
-		// TODO Auto-generated method stub
 		this.partie.melangerCartes();
-		this.partie.retirercarteCachee();
+		this.partie.retirerCarteCachee();
 		this.attribuerMain();
 	}
 	
