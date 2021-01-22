@@ -21,8 +21,8 @@ import fr.corentinPierre.views.Regles;
 
 /**
  * Contrôleur de la configuration d'une partie. 
- * Permet de gérer l'interface graphique de configuration d'une partie.
- * Il fait le lien entre les objets du modèle et la vue. 
+ * <br>Permet de gérer l'interface graphique de configuration d'une partie.
+ * <br>Il fait le lien entre les objets du modèle et la vue. 
  * 
  * @author Corentin Parpette
  * @author Pierre Treuchot
@@ -49,7 +49,7 @@ public class ControleurConfiguration {
 	
 	/**
 	 * Change le nombre de joueurs en fonction de l'affichage du nombre de joueurs sur l'interface.
-	 * @param select Bouton select associé au nombre de joueurs au niveau de la Configuration. Le select doit être du type JComboBox<String> et non null
+	 * @param select Bouton select associé au nombre de joueurs au niveau de la Configuration. Le select doit être du type JComboBox et non null
 	 */
 	public void changeNbJoueurs(JComboBox<String> select) {
 		select.addActionListener(new ActionListener() {
@@ -64,7 +64,7 @@ public class ControleurConfiguration {
 	
 	/**
 	 * Change le type de la partie en fonction de l'affichage type de partie sur l'interface.
-	 * @param select Bouton select associé au type de la partie au niveau de la Configuration. Le select doit être du type JComboBox<String> et non nul
+	 * @param select Bouton select associé au type de la partie au niveau de la Configuration. Le select doit être du type JComboBox et non nul
 	 */
 	public void changeType(JComboBox<String> select) {
 		select.addActionListener(new ActionListener() {
@@ -99,10 +99,10 @@ public class ControleurConfiguration {
 	
 	/**
 	 * Lance la partie en fonction de son type et du nombre / type de joueurs attendu.
-	 * Instancie une nouvelle partie et y ajoute la variante, le nombre de joueurs et leur type (virtuel / humain) attendus 
+	 * <br>Instancie une nouvelle partie et y ajoute la variante, le nombre de joueurs et leur type (virtuel / humain) attendus 
 	 * @param btn Bouton où l'évènement est associé de type JButton non nul
-	 * @param inputs Champs de texte où les noms des Joueurs sont saisis, de type ArrayList<JTextField> non nul.
-	 * @param checkboxes, Bouton checkBox où le type du joueur est spécifié (virtuel ou humain) de type ArrayList<JCheckBox> non nul.
+	 * @param inputs Champs de texte où les noms des Joueurs sont saisis, de type ArrayList non nul.
+	 * @param checkboxes, Bouton checkBox où le type du joueur est spécifié (virtuel ou humain) de type ArrayList non nul.
 	 * 
 	 */
 	public void startPartie(JButton btn, ArrayList<JTextField> inputs, ArrayList<JCheckBox> checkboxes) {

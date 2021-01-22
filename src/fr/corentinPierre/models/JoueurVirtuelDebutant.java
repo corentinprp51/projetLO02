@@ -1,18 +1,22 @@
 package fr.corentinPierre.models;
 /**
- *Classe qui represente un joueur VIRTUEL débutant  dans le jeu SHapeUp
+ * Représente un joueur virtuel débutant dans le jeu Shape Up
+ * <br>Hérite de la classe JoueurVirtuel
+ * 
  * @author Corentin
  * @author Pierre
+ * @see fr.corentinPierre.models.JoueurVirtuel
  **/
 public class JoueurVirtuelDebutant extends JoueurVirtuel{
 
 	private static final long serialVersionUID = 1L;
 	
+
 	/**
-	 * Constructeur
-	 * Le modejeu du joueur virtuel est configurer en PlayEasy
+	 * Passe la stratégie de jeu en PlayEasy pour un joueur débutant 
 	 * @param id
-	 * @param  nom
+	 * @param nom
+	 * @see fr.corentinPierre.models.PlayEasy
 	 */
 	
 	public JoueurVirtuelDebutant(int id, String nom) {

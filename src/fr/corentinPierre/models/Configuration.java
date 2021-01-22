@@ -5,9 +5,8 @@ import java.util.Observable;
 
 
 /**
- *Classe Configuration qui représente les variables necessaire a 
- *la configuration de la partie
- * 
+ * Permet la Configuration d'une partie de jeu Shape Up
+ * <br>Objet observable qui va notifier ses observateurs à chaque modification.
  * @author Corentin Parpette
  * @author Pierre Treuchot
  * 
@@ -32,15 +31,16 @@ public class Configuration extends Observable{
 	 */
 	private int nombreJoueurAttendu;
 	/**
-	 * Etat de la partie
+	 * Etat de la configuration
 	 */
 	
 	private String etat;
 	
 	
 	/**
-	 * Constructeur
-	 * Genère this.joueurs
+	 * Instancie une nouvelle ArrayList pour l'attribut joueurs
+	 * <br>Définit une valeur par défaut à 2 pour l'attribut nombreJoueurAttendu
+	 * 
 	 */
 	
 	public Configuration() {
@@ -50,8 +50,8 @@ public class Configuration extends Observable{
 	
 	/**
 	 * Setter du type de la partie
-	 * Changement de l'état de la partie
-	 * @param String
+	 * <br>Changement de l'état de la partie
+	 * @param tp
 	 */
 	
 	public void setTypePartie(String tp) {
@@ -62,9 +62,10 @@ public class Configuration extends Observable{
 	}
 	
 	/**
-	 * Ajout d'un joueur a la partie
-	 * Changement de l'état de la partie
-	 * @param Joueur
+	 * Ajout d'un joueur à la configuration
+	 * <br>Changement de l'état de la partie
+	 * @param j
+	 * @see fr.corentinPierre.models.Joueur
 	 */
 	
 	public void addJoueur(Joueur j) {
@@ -75,8 +76,8 @@ public class Configuration extends Observable{
 	}
 	
 	/**
-	 * Setter de l'état de la partie
-	 * @param String
+	 * Setter de l'état de la configuration
+	 * @param e
 	 */
 	
 	
@@ -88,8 +89,8 @@ public class Configuration extends Observable{
 	
 	/**
 	 * Setter du nombre de joueur attendu
-	 * Changement de l'état de la partie
-	 * @param int
+	 * <br>Changement de l'état de la partie
+	 * @param nbja
 	 */
 	
 	public void setNombreJoueursAttendu(int nbja) {
@@ -99,13 +100,6 @@ public class Configuration extends Observable{
 		this.notifyObservers();
 	}
 	
-	/**
-	 * Getter de tout les attributs
-	 * de la classe configuration
-	 * @return String
-	 * @return ArrayList
-	 * @return int
-	 */
 	
 	public String getEtat() {
 		return this.etat;
@@ -122,14 +116,6 @@ public class Configuration extends Observable{
 	public int getNombreJoueursAttendu() {
 		return nombreJoueurAttendu;
 	}
-	/**
-	 * Ajoute un joueur a la la listes des joueurs 
-	 * @param Joueur
-	 */
-	
-	
-	public void ajouterJoueur(Joueur j) {
-		this.joueurs.add(j);
-	}
+
 
 }

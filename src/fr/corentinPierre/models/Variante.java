@@ -2,7 +2,7 @@ package fr.corentinPierre.models;
 
 import java.io.Serializable;
 /**
- *Classe qui represente les Variante que peut prendre le jeu
+ * Représentation abstraite d'une variante de Shape Up
  * @author Corentin
  * @author Pierre
  **/
@@ -14,37 +14,24 @@ public abstract class Variante implements Serializable{
 	 **/
 	protected String nom;
 	/**
-	 *Partie dans lequel la variante va etre utilisée
+	 *Partie dans laquelle la variante va être utilisée
 	 **/
 	protected Partie partie;
-	
-	/**
-	 * Constructeur
-	 * @param String
-	 * @param Partie
-	 */
 	
 	public Variante(String nom, Partie p) {
 		this.nom = nom;
 		this.partie = p;
 	}
-	/**
-	 *Getter du nom de la variante
-	 *@return String
-	 */
 	public String getNom() {
 		return this.nom;
 	}
-	/**
-	 * Getter de la partie
-	 * @return Partie
-	 */
 	public Partie getPartie() {
 		return this.partie;
 	}
 
+
 	/**
-	 * Ensemble de méthode abstraite qui devront etre définie dans les Classes héritant de Variante
+	 * Initialise une partie
 	 */
 	abstract public void initialisation();
 	
@@ -52,6 +39,10 @@ public abstract class Variante implements Serializable{
 	
 	abstract public Carte getCarteAPoser();
 	
+	/**
+	 * Pioche une carte
+	 * @return Carte Carte piochée
+	 */
 	abstract public Carte piocher();
 	
 	

@@ -2,28 +2,26 @@ package fr.corentinPierre.models;
 
 import java.util.Random;
 /**
- *Classe qui represente la Variante1  du jeu de SHapeUp
+ * Représentation de la variante normale (et refill) du Shape Up
+ * <br>Hérite de Variante
  * @author Corentin
  * @author Pierre
+ * @see fr.corentinPierre.models.Variante
  **/
 
 public class Variante1 extends Variante{
 	
 	private static final long serialVersionUID = 1L;
-	/**
-	 * Constructeur
-	 * @param String
-	 * @param Partie
-	 */
 	
 	public Variante1(String nom, Partie p) {
 		super(nom, p);
 	}
+
 	/**
-	 *Initilisatiion de la partie,
-	 *mélange des cartes,retrait de la carte Cachée
-	 *et attribution des cartes victoires
-	 *La premiere carte est piocher
+	 * Initialise la partie. 
+	 * <br>Mélange les cartes, retire la carte cachée
+	 * <br>Confie la carte victoire de chaque joueur
+	 * <br>Pioche la première carte de la partie
 	 */
 	public void initialisation() {
 		this.partie.melangerCartes();
@@ -32,7 +30,7 @@ public class Variante1 extends Variante{
 		this.partie.piocher();
 	}
 	/**
-	 *Une carte victoire est attribuée a tout les joueurs puis  enlever du deck
+	 * Attribue une carte Victoire pour chaque joueur
 	 */
 	private void attribuerCartesVictoires() {
 		for(int i = 0; i<this.partie.joueurs.size(); i++) {
@@ -43,25 +41,17 @@ public class Variante1 extends Variante{
 		}
 	}
 	
-	/**
-	 Setter de la carteAPoser
-	 *@param Carte
-	 */
 	@Override
 	public void setCarteAPoser(Carte c) {}
 
-	
-	/**
-	 * Getter de la carte a Poser
-	 * @return Carte
-	 */
 	@Override
 	public Carte getCarteAPoser() {
 		return null;
 	}
+
 	/**
-	 *Une carte est piocher et enlever du deck 
-	 *@return Carte
+	 * Pioche une carte du deck
+	 * @return Carte Carte piochée
 	 */
 	@Override
 	public Carte piocher() {

@@ -19,7 +19,14 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
+/**
+ * Représente un <pre>Panel</pre> d'une partie "Avancée" de Shape Up
+ * <br>Hérite de JPanel
+ * <br>Observateur d'une Partie
+ * @author Corentin
+ * @author Pierre
+ *
+ */
 public class Variante2 extends JPanel implements Observer{
 
 	private Partie partie;
@@ -32,7 +39,9 @@ public class Variante2 extends JPanel implements Observer{
 	private JButton buttonDeplacer;
 	private JButton buttonFinTour;
 	/**
-	 * Create the panel.
+	 * Crée le panel.
+	 * <br>Crée également le contrôleur de partie et appel de ses méthodes pour écouter les évènements liés.
+	 * <br>Crée chaque composant graphique du Panel.
 	 */
 	public Variante2(Partie p) {
 		this.partie = p;
@@ -98,6 +107,14 @@ public class Variante2 extends JPanel implements Observer{
 		partie.setEtat(partie.getEtat());
 	}
 	@Override
+	/**
+	 * Effectue des actions sur les composants graphiques à chaque modification de l'état de l'objet observé.
+	 * <br>La méthode est appelée à chaque modification apportée sur l'objet Partie. 
+	 * <br>Des modifications graphiques sont effectuées en fonction de l'état de la partie après notification des observateurs. 
+	 * @param o Objet observé qui subit des modifications
+	 * @see fr.corentinPierre.models.Partie
+	 * 
+	 */
 	public void update(Observable o, Object arg1) {
 		if (o instanceof Partie) {
 			if(((Partie) o).getVariante() != null) {
@@ -220,6 +237,13 @@ public class Variante2 extends JPanel implements Observer{
 		}
 	}
 	
+	/**
+	 * Crée une ImageIcon redimensionnée en fonction des tailles passées en paramètre.
+	 * @param name Nom de l'Image
+	 * @param w Longueur de l'image
+	 * @param h Hauteur de l'image
+	 * @return ImageIcon Image redimensionnée
+	 */
 	private ImageIcon resizeImage(String name, int w, int h) {
 
 		BufferedImage img = null;
@@ -232,12 +256,20 @@ public class Variante2 extends JPanel implements Observer{
 		return new ImageIcon(dimg);
 	}
 	
+	/**
+	 * Active ou désactive les boutons de la main du joueur
+	 * @param b Si b vaut vrai, les boutons s'activent, ils se désactivent sinon. 
+	 */
 	private void setMainEnabled(boolean b) {
 		this.mainJ.forEach(btn -> {
 			btn.setEnabled(b);
 		});
 	}
 	
+	/**
+	 * Retourne si le joueur courant est un joueur virtuel.
+	 * @return boolean Vrai si le joueur est virtuel, faux sinon. 
+	 */
 	private boolean isJoueurVirtuel() {
 		return partie.getJoueurs().get(partie.getRound() % partie.getJoueurs().size()) instanceof JoueurVirtuel;
 	}
@@ -245,14 +277,24 @@ public class Variante2 extends JPanel implements Observer{
 		return (JoueurVirtuel) partie.getJoueurs().get(partie.getRound() % partie.getJoueurs().size());
 	}
 	
+	/**
+	 * Effectue un clic sur le bouton poser.
+	 */
 	public void clickPoser() {
 		this.buttonPoser.doClick();
 	}
 	
+	/**
+	 * Effectue un clic sur un des boutons de la main du joueur. 
+	 * @param id Id de du bouton sur lequel cliquer. 
+	 */
 	public void clickMain(int id) {
 		this.mainJ.get(id).doClick();
 	}
 	
+	/**
+	 * Désactive tous les composants graphiques sauf la main du joueur. 
+	 */
 	public void attentePoser() {
 		int idJoueur = partie.getRound()%partie.getJoueurs().size();
 		for(int i = 0; i < partie.getJoueurs().get(idJoueur).getMain().size(); i++) {

@@ -6,7 +6,7 @@ import fr.corentinPierre.enums.Couleur;
 import fr.corentinPierre.enums.Forme;
 
 /**
- * Classe Carte qui représente une carte du jeu ShapeUp
+ * Représente une carte du jeu Shape Up
  * @author Corentin
  * @author Pierre
  *
@@ -16,14 +16,12 @@ public class Carte implements Serializable{
 	private static final long serialVersionUID = 1L;
 	private Forme forme;
 	private Couleur couleur;
-	private Boolean fillable;
-	
 	/**
-	 * Constructeur
-	 * @param forme
-	 * @param couleur
-	 * @param fillable
+	 * Vrai si la carte est pleine, faux sinon
 	 */
+	private Boolean fillable;
+
+	
 	public Carte(Forme forme, Couleur couleur, Boolean fillable) {
 		this.forme = forme;
 		this.couleur = couleur;
@@ -32,7 +30,7 @@ public class Carte implements Serializable{
 	
 	/**
 	 * Getter sur l'attribut forme
-	 * Retourne la forme de la carte
+	 * <br>Retourne la forme de la carte
 	 * @return Forme
 	 */
 	public Forme getForme() {
@@ -41,7 +39,7 @@ public class Carte implements Serializable{
 	
 	/**
 	 * Getter sur l'attribut couleur
-	 * Retourne la couleur de la carte
+	 * <br>Retourne la couleur de la carte
 	 * @return Couleur
 	 */
 	public Couleur getCouleur() {
@@ -70,6 +68,10 @@ public class Carte implements Serializable{
 		return bf.toString();
 	}
 	
+	/**
+	 * Retourne le nom de la carte qui correspond au nom de son fichier image associé 
+	 * @return String le nom de la carte de type String et non nul
+	 */
 	public String getImageName() {
 		String color = "", shape = "", fillable = "";
 		switch (this.couleur) {

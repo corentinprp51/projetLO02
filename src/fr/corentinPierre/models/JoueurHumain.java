@@ -1,25 +1,20 @@
 package fr.corentinPierre.models;
 
 /**
- *Classe qui represente un joueur HUMAIN dans le jeu SHapeUp
+ * Représente un joueur humain dans le jeu Shape Up
+ * <br>Hérite de la classe Joueur
+ * 
  * @author Corentin
  * @author Pierre
+ * @see fr.corentinPierre.models.Joueur
  **/
 
 public class JoueurHumain extends Joueur {
 
 	private static final long serialVersionUID = 1L;
 	
-
-	/**
-	 * Constructeur
-	 * @param id
-	 * @param  nom
-	 */
-	
 	public JoueurHumain(int id, String nom) {
 		super(id, nom);
-		// TODO Auto-generated constructor stub
 	}
 
 }

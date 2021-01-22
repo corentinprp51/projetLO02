@@ -4,17 +4,21 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- *Classe qui permet de calculer les scores des différents joueur
+ * Représentation du Visitor dans le patron de conception Visitor pour calculer les scores.
  * @author Corentin
  * @author Pierre
+ * @see fr.corentinPierre.models.Visitor
  **/
 
 public class ScoreVisitor implements Visitor{
 	/**
-	 * Recupère le score du joueur et les return 
-	 * @param Partie
-	 * @param int
-	 * return int 
+	 * Calcule le score d'un joueur 
+	 * @param p Partie à visiter
+	 * @param id Id du Joueur
+	 * @return int Score du Joueur
+	 * @see fr.corentinPierre.models.ScoreVisitor#calculerCouleur(Partie, Carte)
+	 * @see fr.corentinPierre.models.ScoreVisitor#calculerForme(Partie, Carte)
+	 * @see fr.corentinPierre.models.ScoreVisitor#calculerFillable(Partie, Carte)
 	 */
 	@Override
 	public int visit(Partie p, int id) {
@@ -25,10 +29,10 @@ public class ScoreVisitor implements Visitor{
 	}
 	
 	/**
-	 * Determine le nombre de points obtenu par le joueur en fonction de si sa carte victoire est pleine ou vide
-	 * @param Partie
-	 * @param Carte
-	 * return int 
+	 * Détermine le nombre de points obtenu par le joueur en fonction du remplissage de sa carte victoire
+	 * @param p Partie à visiter
+	 * @param victoire Carte victoire du joueur
+	 * @return int Score obtenu en fonction du remplissage de la carte victoire
 	 */
 	
 	public int calculerFillable(Partie p, Carte victoire) {
@@ -108,10 +112,10 @@ public class ScoreVisitor implements Visitor{
 		return score;
 	}
 	/**
-	 * Determine le nombre de points obtenu par le joueur en fonction de la couleur de sa carte victoire
-	 * @param Partie
-	 * @param Carte
-	 * return int 
+	 * Détermine le nombre de points obtenu par le joueur en fonction de la couleur de sa carte victoire
+	 * @param p Partie à visiter
+	 * @param victoire Carte victoire du joueur
+	 * @return int Score obtenu en fonction de la couleur de la carte victoire
 	 */
 	public int calculerCouleur(Partie p, Carte victoire) {
 		int score = 0;
@@ -190,10 +194,10 @@ public class ScoreVisitor implements Visitor{
 		return score;
 	}
 	/**
-	 * Determine le nombre de points obtenu par le joueur en fonction de la forme de sa carte victoire
-	 * @param Partie
-	 * @param Carte
-	 * return int 
+	 * Détermine le nombre de points obtenu par le joueur en fonction de la forme de sa carte victoire
+	 * @param p Partie à visiter
+	 * @param victoire Carte victoire du joueur
+	 * @return int Score obtenu en fonction de la forme de la carte victoire
 	 */
 	public int calculerForme(Partie p, Carte victoire) {
 		int score = 0;

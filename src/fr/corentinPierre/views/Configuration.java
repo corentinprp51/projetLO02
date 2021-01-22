@@ -2,6 +2,14 @@ package fr.corentinPierre.views;
 
 import javax.swing.JPanel;
 
+/**
+ * Interface graphique de la configuration de partie
+ * Observateur de l'observable Configuration
+ * Hérite de JPanel
+ * @author Corentin
+ * @author Pierre
+ */
+
 import fr.corentinPierre.controllers.ControleurConfiguration;
 import fr.corentinPierre.models.Partie;
 
@@ -23,7 +31,15 @@ import java.util.Observer;
 
 import javax.swing.JTextField;
 import javax.swing.JCheckBox;
-
+/**
+ * /**
+ * Représente un <pre>Panel</pre> graphique de la configuration d'une partie de Shape Up.
+ * <br>Hérite de JPanel.
+ * <br>Observateur d'une Configuration.
+ * @author Corentin
+ * @author Pierre
+ * @see fr.corentinPierre.models.Configuration
+ */
 public class Configuration extends JPanel implements Observer {
 
 	private JTextField nomJoueur1;
@@ -49,7 +65,12 @@ public class Configuration extends JPanel implements Observer {
 	JButton btnRegles;
 
 	/**
-	 * Create the panel.
+	 * Création du panel.
+	 * <br>Ajout de la classe en observer de l'objet Configuration
+	 * <br>Appel de la méthode initialize
+	 * <br>Création du contrôleur de configuration et appel de ses méthodes pour écouter les évènements liés.
+	 * @see fr.corentinPierre.models.Configuration
+	 * @see fr.corentinPierre.models.Partie
 	 */
 	public Configuration(fr.corentinPierre.models.Configuration c, Partie p) {
 		this.partie = p;
@@ -102,6 +123,11 @@ public class Configuration extends JPanel implements Observer {
 			}
 		});
 	}
+	
+	/**
+	 * Création de tous les composants graphiques de l'interface.
+	 * @exception IOException Attrape cette exception si il y'a un problème au niveau du flux de lecture
+	 */
 	
 	private void initialize() {
 		JLabel lblNewLabel = new JLabel("Configuration de la partie");
@@ -206,7 +232,6 @@ public class Configuration extends JPanel implements Observer {
 			wPic = ImageIO.read(this.getClass().getResource("/logo.PNG"));
 			wIcon.setIcon(new ImageIcon(wPic));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -224,6 +249,13 @@ public class Configuration extends JPanel implements Observer {
 	}
 
 	@Override
+	/**
+	 * Effectue des actions sur les composants graphiques à chaque modification de l'état de l'objet observé
+	 * <br>La méthode est appelée à chaque modification apportée sur l'objet Configuration. 
+	 * <br>Rends visible ou non la zone de saisie du 3è joueur en fonction de l'état de l'objet Configuration
+	 * @see fr.corentinPierre.models.Configuration
+	 * 
+	 */
 	public void update(Observable o, Object arg1) {
 		if(o instanceof fr.corentinPierre.models.Configuration) {
 			switch (((fr.corentinPierre.models.Configuration) o).getEtat()) {

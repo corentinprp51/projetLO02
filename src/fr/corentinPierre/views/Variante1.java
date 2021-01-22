@@ -20,6 +20,14 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+/**
+ * Représente un <pre>Panel</pre> d'une partie "Normale" ou "Refill" de Shape Up.
+ * <br>Hérite de JPanel.
+ * <br>Observateur d'une Partie.
+ * @author Corentin
+ * @author Pierre
+ *
+ */
 public class Variante1 extends JPanel implements Observer{
 
 	private Partie partie;
@@ -33,7 +41,9 @@ public class Variante1 extends JPanel implements Observer{
 	private JButton buttonCarteVictoire;
 	private JButton buttonCartePiochee;
 	/**
-	 * Create the panel.
+	 * Crée le panel.
+	 * <br>Crée également le contrôleur de partie et appel de ses méthodes pour écouter les évènements liés.
+	 * <br>Appel la méthode initialize
 	 */
 	public Variante1(Partie p) {
 		this.partie = p;
@@ -49,6 +59,9 @@ public class Variante1 extends JPanel implements Observer{
 		
 	}
 	
+	/**
+	 * Crée chacun des composants graphiques du Panel
+	 */
 	public void initialize() {
 		buttonPoser = new JButton("Poser Carte");
 		buttonPoser.setBounds(199, 144, 89, 23);
@@ -109,6 +122,14 @@ public class Variante1 extends JPanel implements Observer{
 		add(labelTour);
 	}
 	@Override
+	/**
+	 * Effectue des actions sur les composants graphiques à chaque modification de l'état de l'objet observé.
+	 * <br>La méthode est appelée à chaque modification apportée sur l'objet Partie. 
+	 * <br>Des modifications graphiques sont effectuées en fonction de l'état de la partie après notification des observateurs. 
+	 * @param o Objet observé qui subit des modifications
+	 * @see fr.corentinPierre.models.Partie
+	 * 
+	 */
 	public void update(Observable o, Object arg1) {
 		// TODO Auto-generated method stub
 		if (o instanceof Partie) {
@@ -213,6 +234,13 @@ public class Variante1 extends JPanel implements Observer{
 		}
 	}
 	
+	/**
+	 * Crée une ImageIcon redimensionnée en fonction des tailles passées en paramètre.
+	 * @param name Nom de l'Image
+	 * @param w Longueur de l'image
+	 * @param h Hauteur de l'image
+	 * @return ImageIcon Image redimensionnée
+	 */
 	private ImageIcon resizeImage(String name, int w, int h) {
 
 		BufferedImage img = null;
@@ -225,7 +253,10 @@ public class Variante1 extends JPanel implements Observer{
 		return new ImageIcon(dimg);
 	}
 	
-	
+	/**
+	 * Retourne si le joueur courant est un joueur virtuel.
+	 * @return boolean Vrai si le joueur est virtuel, faux sinon. 
+	 */
 	private boolean isJoueurVirtuel() {
 		return partie.getJoueurs().get(partie.getRound() % partie.getJoueurs().size()) instanceof JoueurVirtuel;
 	}
@@ -233,6 +264,9 @@ public class Variante1 extends JPanel implements Observer{
 		return (JoueurVirtuel) partie.getJoueurs().get(partie.getRound() % partie.getJoueurs().size());
 	}
 	
+	/**
+	 * Effectue un clic sur le bouton poser. 
+	 */
 	public void clickPoser() {
 		this.buttonPoser.setEnabled(true);
 		this.buttonPoser.doClick();

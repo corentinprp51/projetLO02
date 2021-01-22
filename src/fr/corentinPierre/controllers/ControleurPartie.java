@@ -16,8 +16,8 @@ import fr.corentinPierre.views.Scores;
 
 /**
  * Contrôleur responsable du déroulement de la partie. 
- * Permet de gérer l'interface graphique d'une partie.
- * Il fait le lien entre les objets du modèle et la vue. 
+ * <br>Permet de gérer l'interface graphique d'une partie.
+ * <br>Il fait le lien entre les objets du modèle et la vue. 
  * 
  * @author Corentin Parpette
  * @author Pierre Treuchot
@@ -28,11 +28,20 @@ import fr.corentinPierre.views.Scores;
  */
 
 public class ControleurPartie {
+	/**
+	 * Partie en cours
+	 */
 	private Partie partie;
 	public ControleurPartie( final Partie partie) {
 		this.partie = partie;
 	}
 	
+	/**
+	 * Met fin au tour du joueur en cours.
+	 * <br>Lors du clic sur un bouton, c'est au tour du joueur suivant de jouer.
+	 * <br>En fonction de la variante, la partie peut se terminer si le deck est vide ou si les joueurs n'ont plus qu'une carte en main.
+	 * @param btn Bouton de type JButton où l'évènement de clic lui est associé
+	 */
 	public void finTour(JButton btn) {
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -70,6 +79,11 @@ public class ControleurPartie {
 		});
 	}
 	
+	/**
+	 * Met la partie en attente pour permettre au joueur de poser une carte
+	 * <br>Lors du clic sur le bouton, la partie se met en attente afin que le joueur puisse poser une carte.
+	 * @param btn Bouton de type JButton où l'évènement de clic lui est associé
+	 */
 	public void askPoser(JButton btn) {
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -78,6 +92,11 @@ public class ControleurPartie {
 		});
 	}
 	
+	/**
+	 * Met la partie en attente pour permettre au joueur de déplacer une carte
+	 * <br>Lors du clic sur le bouton, la partie se met en attente afin que le joueur puisse déplacer une carte.
+	 * @param btn Bouton de type JButton où l'évènement de clic lui est associé
+	 */
 	public void askDeplacer(JButton btn) {
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -86,6 +105,14 @@ public class ControleurPartie {
 		});
 	}
 	
+	/**
+	 * Permet au joueur de poser une carte sur le plateau.
+	 * <br>Lors du clique sur une des cases du plateau, la méthode est appelée et va permettre au joueur de poser une carte si la règle d'adjacence est respectée.
+	 * <br>S'il est impossible de la poser, la partie se met dans un état erreurPoser ou impossiblePoser
+	 * @param grille La grille du plateau de type ArrayList et non nulle. 
+	 * @see fr.corentinPierre.views.JButtonCustom
+	 * @see fr.corentinPierre.controllers.ControleurPartie#carteAPoser(ArrayList)
+	 */
 	public void poserCarte(ArrayList<JButtonCustom> grille) {
 		grille.forEach(btn -> {
 			btn.addActionListener(new ActionListener() {
@@ -120,6 +147,12 @@ public class ControleurPartie {
 		});
 	}
 	
+	/**
+	 * (Variante2) Permet au joueur de choisir dans sa main la carte qu'il souhaite poser.
+	 * <br>Lors du clic sur un des boutons correspondant à sa main, la carte (si elle est non nulle), la partie va sauvegarder cette Carte pour la poser à l'aide de la méthode poserCarte. 
+	 * @param main La main du joueur dans la Variante Avancée de type ArrayList et non nulle
+	 * @see fr.corentinPierre.views.JButtonIndex
+	 */
 	public void carteAPoser(ArrayList<JButtonIndex> main) {
 		main.forEach(btn -> {
 			btn.addActionListener(new ActionListener() {
@@ -136,6 +169,10 @@ public class ControleurPartie {
 		});
 	}
 	
+	/**
+	 * Affiche la règle des scores lors du clic sur un bouton
+	 * @param btn Bouton de type JButton où l'évènement clic lui est associé
+	 */
 	public void displayScores(JButton btn) {
 		btn.addActionListener(new ActionListener() {
 			

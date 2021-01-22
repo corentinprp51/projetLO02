@@ -20,16 +20,20 @@ import fr.corentinPierre.enums.Couleur;
 import fr.corentinPierre.enums.Forme;
 
 /**
- *Classe qui represente une partie dans le jeu SHapeUp
+ * Représente une partie de jeu Shape Up.
+ * <br>Une Partie possède également une Variante (Variante1, Variante2 ou Variante3).
+ * <br>Les scores de la partie sont calculés à l'aide du patron de conception Visitor.
+ * <br>La classe Partie est un observable donc elle hérite de la classe Observable.
  * @author Corentin
  * @author Pierre
+ * @see fr.corentinPierre.models.Visitable
  **/
 
 
 
 public class Partie extends Observable implements Serializable, Visitable {
 	/**
-	 * nombre de round 
+	 * Nombre de rounds 
 	 */
 	protected int round;
 	/**
@@ -41,12 +45,12 @@ public class Partie extends Observable implements Serializable, Visitable {
 	 */
 	protected ArrayList<Joueur> joueurs;
 	/**
-	 * Plateau sur lequel la partie se deroule
+	 * Plateau sur lequel la partie se déroule
 	 */
 	protected Plateau plateau;
 	
 	/**
-	 * Carte qui sera enlever du deck en début de la partie
+	 * Carte qui sera enlevée du deck en début de la partie
 	 */
 	protected Carte carteSupp;
 	/**
@@ -54,35 +58,35 @@ public class Partie extends Observable implements Serializable, Visitable {
 	 */
 	protected String etat = "";
 	/**
-	 * Carte piocher par un joueur
+	 * Carte piochée par un joueur
 	 */
 	protected Carte cartePiochee;
 	/**
-	 * Carte choisie par le joueur qui veut la deplacer
+	 * Carte du plateau choisie par le joueur qui veut la déplacer
 	 */
 	protected Carte carteADeplacer;
 	
 	/**
-	 * Attribut qui stock si un joueur a deja deplacer une carte ou non 
+	 * Permet de savoir si un joueur a déjà déplacé une carte ou nom pendant ce tour. 
 	 */
 	protected boolean alreadyDeplacee;
 	
 	/**
-	 * Variante de la  partie 
+	 * Variante de la  partie
 	 */
 	protected Variante regle;
 	
 	/**
-	 * La partie a été sauvegarder ou non 
+	 * Permet de savoir si la partie est une partie sauvegardée. 
 	 */
 	protected boolean loaded = false;
 	
 	/**
 	 * Constructeur
-	 * Initialise la partie au round 0
-	 * Créer une liste ( Liste des cartes)
-	 * Créer une autre liste (Liste des joueurs)
-	 * @param Plateau
+	 * <br>Initialise la partie au round 0
+	 * <br>Créer la liste des cartes
+	 * <br>Créer la liste des joueurs
+	 * @param plateau Plateau de la partie
 	 */
 	public Partie(Plateau plateau) {
 		this.round = 0;
@@ -91,39 +95,24 @@ public class Partie extends Observable implements Serializable, Visitable {
 		this.joueurs = new ArrayList<Joueur>();
 	}
 	
-	/**
-	 * Setter de la Variante 
-	 * @param Variante
-	 */
-	
 	public void setVariante(Variante v) {
 		this.regle = v;
 	}
-	/**
-	 * Getter de la Variante 
-	 * @return Variante
-	 */
+
 	public Variante getVariante() {
 		return this.regle;
 	}
 	
-	/**
-	 * Getter du round
-	 * @return int
-	 */
 	public int getRound() {
 		return this.round;
 	}
-	/**
-	 * Savoir si une partie a été sauvegarder
-	 * @return boolean
-	 */
+
 	public boolean getLoaded() {
 		return this.loaded;
 	}
 	/**
-	 *Création des cartes, ajout des cartes au deck 
-	 *puis mélange du deck 
+	 *Créé, ajoute puis mélange les cartes du deck
+	 *@see fr.corentinPierre.models.Carte
 	 */
 	public void melangerCartes() {
 		for(int j = 0; j < Forme.values().length; j++) {
@@ -140,53 +129,36 @@ public class Partie extends Observable implements Serializable, Visitable {
 		Collections.shuffle(this.deck);
 	}
 	
-	/**
-	 * Ajouter un joueur à la partie
-	 * @param Joueur j
-	 */
 	public void ajouterJoueur(Joueur j) {
 		this.joueurs.add(j);
 	}
-	
-	/**
-	 * Getter de la listes des joueurs jouant la partie
-	 * @return ArrayList
-	 */
-	
+		
 	public ArrayList<Joueur> getJoueurs(){
 		return this.joueurs;
 	}
 	
-	
-	/**
-	 * Getter sur la Carte supprimer en début de partie
-	 * @return Carte
-	 */
 	public Carte getCarteSupp() {
 		return this.carteSupp;
 	}
-	
-	/**
-	 * Getter sur le plateau
-	 * @return Plateau
-	 */
+
 	public Plateau getPlateau() {
 		return this.plateau;
 	}
 	
 	/**
-	 * Piocher une carte
-	 * @return Carte
+	 * Appelle la méthode de piochage de la variante
+	 * @return Carte Carte piochée
+	 * @see fr.corentinPierre.models.Variante
 	 */
 	public Carte piocher() {
 		return regle.piocher();
 		
 	}
 	/**
-	 * En fonction de la variante choisie,la fonction permet de :
-	 * Variante Refill : la fonction va regenerer les Cartes, remplir et remelanger le deck
-	 * et ensuite elle incrémante le round et change l'état et l'attribut alredy deplacee de la partie
-	 * En Variante Classique et expert elle se contente d'incrémanter le round et change l'état et l'attribut already deplacee de la partie
+	 * Permet de passer au round suivant.
+	 * <br>En fonction de la variante :
+	 * <br>(Variante3) Refill : la fonction va regénérer des cartes, remplir et remélanger le deck au milieu de la partie<br>
+	 * (Variante1 & Variante2) Classique et Avancé : Incrémente le round et l&apos;indique à ses observateurs
 	 *
 	 */
 	public void nouveauRound() {
@@ -223,24 +195,16 @@ public class Partie extends Observable implements Serializable, Visitable {
 		}
 	}
 	
-	/**
-	 * Getter du deck
-	 * @return LinkedList
-	 */
 	public LinkedList<Carte> getDeck(){
 		return this.deck;
 	}
 	
-	/**
-	 * Getter de l'état de la partie
-	 * @return String
-	 */
 	public String getEtat() {
 		return this.etat;
 	}
 	/**
-	 * Setter de l'état de la partie
-	 * @param String
+	 * Change l'état de la partie et en informe ses observateurs
+	 * @param etat Nouvel état de la partie
 	 */
 	public void setEtat(String etat) {
 		this.etat = etat;
@@ -248,31 +212,22 @@ public class Partie extends Observable implements Serializable, Visitable {
 		this.notifyObservers();
 	}
 	
-	/**
-	 * Getter de la carte piochée durant se tour
-	 * @return Carte
-	 */
 	public Carte getCartePiochee() {
 		return this.cartePiochee;
 	}
-	/**
-	 * Getter de la carte a deplacer
-	 * @return Carte
-	 */
+
 	public Carte getCarteADeplacer() {
 		return this.carteADeplacer;
 	}
-	/**
-	 * Getter l'état de l'attribut AlreadyDeplacee
-	 * @return Boolean
-	 */
+
 	public boolean getAlreadyDeplacee() {
 		return this.alreadyDeplacee;
 	}
 	
 	/**
-	 * Méthode qui determine quel joueur a gagner la partie
-	 * @return Joueur
+	 * Détermine le Vainqueur de la partie. 
+	 * <br>En cas d'égalité, le premier joueur qui possède le score est déclaré vainqueur.
+	 * @return Joueur Joueur vainqueur de la partie.
 	 */
 	public Joueur getVainqueur() {
 		Joueur vainqueur = null;
@@ -283,9 +238,9 @@ public class Partie extends Observable implements Serializable, Visitable {
 		}
 		return vainqueur;
 	}
-	/**
-	 * Méthode qui enleve une carte aléatoire du deck
 
+	/**
+	 * Retire une carte du deck de manière aléatoire
 	 */
 	protected void retirerCarteCachee() {
 		Random rand = new Random();
@@ -295,7 +250,7 @@ public class Partie extends Observable implements Serializable, Visitable {
 	}
 	
 	/**
-	 * Méthode toString permettant l'affichage des attributs de la partie
+	 * Permet l'affichage d'une partie
 	 * @return String
 	 */
 	
@@ -312,8 +267,9 @@ public class Partie extends Observable implements Serializable, Visitable {
 	}
 	
 	/**
-	 * Méthode intialisant la partie en fonction de la variante choisie
-	 * et qui change l'état de la partie
+	 * Appel de la méthode d'initialisation de la Variante
+     * <br>Change l'état actuel et en informe ses observateurs
+	 * @see fr.corentinPierre.models.Variante
 	 */
 	public void initialisation() {
 		this.regle.initialisation();
@@ -323,11 +279,15 @@ public class Partie extends Observable implements Serializable, Visitable {
 	}
 	
 	/**
-	 * Méthode s'occupant de la pose des cartes en fonction des variantes
-	 * 
-	 * @param int coordoner x 
-	 * @parem int coordoner y 
-	 * @return Boolean en fonction de si la pose de carte a été un succès ou non
+	 * Pose une carte en fonction de la variante et du round actuel
+	 * <br>Si la partie en est à son premier round, la carte peut être posée n'importe où sur le plateau
+	 * <br>Si on joue en Variante normale, la carte ne sera posée uniquement si elle vérifie la règle d'adjacence
+	 * <br>Si on joue en Variante avancée, la carteAPoser sera posée uniquement si elle vérifie la règle d'adjacence. La valeur de l'attribut carteAPoser sera nulle après.
+	 * <br>La partie informe ses observateurs du placement ou non de la carte. 
+	 * @param x Coordonnée x du plateau 
+	 * @param y Coordonnée y du plateau
+	 * @return Boolean Vrai si la carte a été posée, faux sinon.
+	 * @see fr.corentinPierre.models.Variante
 	 */
 	
 	
@@ -363,10 +323,11 @@ public class Partie extends Observable implements Serializable, Visitable {
 	}
 	
 	/**
-	 * Méthode permettant de selectionner une carte a deplacer 
-	 * @param int coordoner x de la carte voulu
-	 * @parem int coordoner y de la carte voulu
-	 * @return Carte carte choisie par le joueur
+	 * Sélectionne une carte du plateau à déplacer 
+	 * <br>Informe ses observateurs si la carte est valide et non nulle.
+	 * @param x Coordonnée x de la carte
+	 * @param y Coordonnée y de la carte
+	 * @return Carte Carte choisie par le joueur | null s'il n'y a pas de carte à cet emplacement
 	 */
 	
 	
@@ -384,12 +345,17 @@ public class Partie extends Observable implements Serializable, Visitable {
 		this.notifyObservers();
 		return this.carteADeplacer;
 	}
+
+
 	/**
-	 * Méthode permettant de replacer sur le plateau la carte que le joueur souhaite deplacer
-	 * @param Carte 
-	 * @param int coordoner x 
-	 * @parem int coordoner y 
-	 * @return boolean
+	 * Déplace la carte à choisie précédemment par le joueur sur le plateau
+	 * <br>Si le nouvel emplacement est vérifie la règle d'adjacence, la carte est placée et l'attribut alreadyDeplacee passe à vrai
+	 * <br>La partie informe ses observateurs du placement ou non de la carte. 
+	 * @param x Coordonnée x du plateau 
+	 * @param y Coordonnée y du plateau
+	 * @return Boolean Vrai si la carte a été posée, faux sinon.
+	 * @see fr.corentinPierre.models.Partie#carteADeplacer
+	 * @see fr.corentinPierre.models.Partie#prendreCarteADeplacer(int, int)
 	 */
 	
 
@@ -411,8 +377,8 @@ public class Partie extends Observable implements Serializable, Visitable {
 	}
 	
 	/**
-	 * Méthode vérifiant si tout les joueurs ont une carte en main
-	 * @return boolean
+	 * (Variante2) Vérifie si tous les joueurs n'ont plus  qu'une carte en main
+	 * @return boolean Vrai si les joueurs n'ont qu'une carte en main, faux sinon
 	 */
 	
 	public boolean allPlayerHaveOneCard() {
@@ -430,8 +396,10 @@ public class Partie extends Observable implements Serializable, Visitable {
 	}
 	
 	/**
-	 * Méthode qui affecte son score  a chaque joueur 
-	 * et change l'état de la partie en "finPartie"
+	 * Calcule le score de chaque joueur 
+	 * <br>Informe ses observateurs de la fin de la partie une fois les scores calculés
+	 * @see fr.corentinPierre.models.Joueur
+	 * @see fr.corentinPierre.models.Partie#accept(Visitor, int)
 	 */
 	
 	public void calculerScore() {
@@ -441,8 +409,11 @@ public class Partie extends Observable implements Serializable, Visitable {
 		this.setEtat("finPartie");
 	}
 	
+	
 	/**
-	 * Méthode permettant de sauvegarde la partie
+	 * Permet de sauvegarder une partie
+	 * @param p Partie à sauvegarder
+	 * @param fileName Nom du fichier où la partie sera sauvegardée de type String et non nul
 	 */
 	
 	public static void savePartie(Partie p, String fileName) {
@@ -458,15 +429,14 @@ public class Partie extends Observable implements Serializable, Visitable {
 		}
 	}
 	
-	/**
-	 * Méthode qui indique si la partie a été sauvegardée
-	 */
 	public void setLoaded(boolean l) {
 		this.loaded = l;
 	}
 	
 	/**
-	 * Méthode permettant d'importer une partie sauvegardée
+	 * Permet de charger une partie sauvegardée
+	 * @param fileName Nom du fichier où la partie était sauvegardée de type String et non nul
+	 * @return Partie Partie chargée
 	 */
 	public static Partie loadPartie(String fileName) {
 		Partie p = new Partie(new Plateau());
@@ -487,6 +457,12 @@ public class Partie extends Observable implements Serializable, Visitable {
 		
 	}
 
+	/**
+	 * Permet d'aller visiter la classe Partie pour calculer le score d'un joueur
+	 * @param visitor 
+	 * @param id Id du joueur
+	 * @return int Score du joueur
+	 */
 	@Override
 	public int accept(Visitor visitor, int id) {
 		return visitor.visit(this, id);

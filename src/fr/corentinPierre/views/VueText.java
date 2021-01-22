@@ -15,14 +15,18 @@ import fr.corentinPierre.models.Partie;
 import fr.corentinPierre.models.Variante1;
 import fr.corentinPierre.models.Variante2;
 /**
- * Classe VueText
- * TEST COMMIT OHO
- * Représente une partie de ShapeUp en console
- * @author Coco
- *
+ * Vue Console d'une partie de Jeu Shape Up.
+ * <br>La Vue console est concurrente avec la Vue Graphique. 
+ * <br>Elle est donc observateur des objets observables Configuration et Partie
+ * 
+ * @author Corentin
+ * @author Pierre
+ * @see fr.corentinPierre.models.Configuration
+ * @see fr.corentinPierre.models.Partie
  */
 @SuppressWarnings("deprecation")
 public class VueText implements Observer, Runnable{
+	
 	public static String PROMPT = "> ";
 	public static String START = "C";
 	public static String POSER = "P";
@@ -35,13 +39,18 @@ public class VueText implements Observer, Runnable{
 	public VueText(Partie partie) {
 		this.partie=partie;
 		partie.addObserver(this);
-		// On crée un Thread sur this qui est la VueTexte
+		//Création du Thread
 		Thread t  = new Thread(this);
 		// On démarre le Thread
 		t.start();
 	}
 
 	@Override
+	/**
+	 * Configure, crée et joue une partie de Shape Up.
+	 * <br>Toutes les saisies sont effectuées au sein de la méthode run.
+	 * <br>L'utilisateur peut ainsi configurer sa partie et y jouer en mode Texte.
+	 */
 	public void run() {
 		// Logique du jeu
 		Boolean exit = false;
@@ -220,7 +229,10 @@ public class VueText implements Observer, Runnable{
 		System.exit(0);
 	}
 	
-	//Méthodes pour le lancement de la partie
+	/**
+	 * Retourne un message selon l'état de la partie.
+	 * @return String Chaîne de caractère du message designé
+	 */
 	
 	private String messageConsole() {
 		String msg = "";
@@ -248,6 +260,14 @@ public class VueText implements Observer, Runnable{
 	}
 
 	@Override
+	/**
+	 * Effectue des affichages consoles à chaque modification de l'état de l'objet observé.
+	 * <br>La méthode est appelée à chaque modification apportée sur l'objet Partie. 
+	 * <br>Des modifications graphiques sont effectuées en fonction de l'état de la partie après notification des observateurs. 
+	 * @param o Objet observé qui subit des modifications
+	 * @see fr.corentinPierre.models.Partie
+	 * 
+	 */
 	public void update(Observable o, Object arg1) {
 		if(o instanceof Partie) {
 			switch (((Partie) o).getEtat()) {
@@ -328,6 +348,10 @@ public class VueText implements Observer, Runnable{
 		}
 	}
 	
+	/**
+	 * Retourne la saisie de l'utilisateur dans la console
+	 * @return String Saisie de l'utilisateur.
+	 */
 	public String lireChaine(){
 		BufferedReader br = new BufferedReader (new InputStreamReader(System.in ));
 		String resultat=null;

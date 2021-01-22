@@ -17,13 +17,21 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+/**
+ * Fenêtre affichant la règle de comptage des points pour le score final
+ * <br>Hérite de JDialog
+ * @author Corentin
+ * @author Pierre
+ *
+ */
 public class Scores extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 
 
 	/**
-	 * Create the dialog.
+	 * Créer la fenêntre de règles
+	 * <br>Lie un évènement de clic au bouton ok pour fermer la fenêtre lorsque ce dernier est cliqué.
 	 */
 	public Scores() {
 		setBounds(100, 100, 700, 400);
@@ -57,7 +65,6 @@ public class Scores extends JDialog {
 				okButton.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent arg0) {
-						// TODO Auto-generated method stub
 						dispose();
 					}
 				});

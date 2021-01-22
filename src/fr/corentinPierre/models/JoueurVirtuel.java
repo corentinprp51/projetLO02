@@ -1,8 +1,11 @@
 package fr.corentinPierre.models;
 /**
- *Classe qui represente un joueur VIRTUEL dans le jeu SHapeUp
+ * Représente un joueur virtuel dans le jeu Shape Up
+ * <br>Hérite de la classe Joueur
+ * 
  * @author Corentin
  * @author Pierre
+ * @see fr.corentinPierre.models.Joueur
  **/
 
 abstract public class JoueurVirtuel extends Joueur{
@@ -12,23 +15,17 @@ abstract public class JoueurVirtuel extends Joueur{
 	 *Le mode de jeu du joueur virtuel
 	 **/
 	protected ModeJeuStrategy modeJeu;
-	/**
-	 * Constructeur
-	 * @param id
-	 * @param  nom
-	 */
+
 	public JoueurVirtuel(int id, String nom) {
 		super(id, nom);
 	}
 	
-	
 	/**
-	 *Choix des coordonner ou placer la carte
-	 *@return int[]
+	 * Détermine les coordonnées x,y où le joueur virtuel peut poser sa carte
+	 * @return int[] Un tableau d'entier sous la forme [x,y] correspondant aux coordonées x et y du plateau
 	 */
 
 	public int[] choisirEmplacement() {
-		// TODO Auto-generated method stub
 		return modeJeu.placement();
 	}
 

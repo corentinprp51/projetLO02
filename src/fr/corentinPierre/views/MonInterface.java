@@ -46,26 +46,60 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * Fenêtre <pre>principale</pre> d'une partie de Shape Up.
+ * <br>Regroupe les panels de Variantes et de Configuration
+ * <br>Observateur de Partie. 
+ * @author Corentin
+ * @author Pierre
+ * @see fr.corentinPierre.views.JButtonCustom
+ * @see fr.corentinPierre.models.Partie
+ * @see fr.corentinPierre.views.Variante1
+ * @see fr.corentinPierre.views.Variante2
+ * @see fr.corentinPierre.views.Configuration
+ *
+ */
 public class MonInterface implements Observer {
 
+	/**
+	 * Frame de l'application
+	 */
 	private JFrame frame;
 	private Partie partie;
+	/**
+	 * Coordonnées des boutons qui représentent le plateau
+	 */
 	private ArrayList<JButtonCustom> grille;
+	/**
+	 * Panel pour l'affichage des scores
+	 */
 	private JPanel panel_2;
+	/**
+	 * Panels indiquant le score de chaque joueur
+	 */
 	private ArrayList<JPanel> scores;
 	private JLabel lblVainqueur;
 	private Configuration configurationPanel;
+	/**
+	 * Panel regroupant les boutons de la grille
+	 */
 	private JPanel panel;
 	private Variante2 panelVariante2;
 	private fr.corentinPierre.views.Variante1 panelVariante1;
 	private JButton btnDisplayScore;
+	/**
+	 * Fenêtre demandant de sauvegarder une partie
+	 */
 	private JDialog dialog;
+	/**
+	 * Panel présent dans la fenêtre de sauvegarde de partie
+	 */
 	private JPanel contentPanel;
 	private JButton okButton;
 	private JButton cancelButton;
 
 	/**
-	 * Launch the application.
+	 * Méthode principale du projet qui permet de lancer une partie de jeu en Vue Graphique et en Vue Texte
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -84,7 +118,9 @@ public class MonInterface implements Observer {
 	}
 
 	/**
-	 * Create the application.
+	 * Création de la fenêtre en initialisant les champs requis.
+	 * <br>Appel de la méthode initialize
+	 * <br>Création du contrôleur de partie et appel de ses méthodes pour écouter les évènements liés.
 	 */
 	public MonInterface(Partie partie) {
 		this.partie = partie;
@@ -99,7 +135,10 @@ public class MonInterface implements Observer {
 	}
 
 	/**
-	 * Initialize the contents of the frame.
+	 * Créé tous les composants graphiques de l'interface.
+	 * <br>Permet la sauvegarde ou le chargement d'une partie. 
+	 * @see fr.corentinPierre.views.JButtonCustom
+	 * 
 	 */
 	private void initialize() {
 		this.initializeSauvegardeDialog();
@@ -313,6 +352,14 @@ public class MonInterface implements Observer {
 	}
 
 	@Override
+	/**
+	 * Effectue des actions sur les composants graphiques à chaque modification de l'état de l'objet observé
+	 * <br>La méthode est appelée à chaque modification apportée sur l'objet Partie. 
+	 * <br>Des modifications graphiques sont effectuées en fonction de l'état de la partie après notification des observateurs. 
+	 * @param o Objet observé qui subit des modifications
+	 * @see fr.corentinPierre.models.Partie
+	 * 
+	 */
 	public void update(Observable o, Object arg1) {
 		if(o instanceof Partie) {
 			switch (((Partie) o).getEtat()) {
@@ -438,6 +485,14 @@ public class MonInterface implements Observer {
 			
 		}
 	}
+	
+	/**
+	 * Crée une ImageIcon redimensionnée en fonction des tailles passées en paramètre
+	 * @param name Nom de l'Image
+	 * @param w Longueur de l'image
+	 * @param h Hauteur de l'image
+	 * @return ImageIcon Image redimensionnée
+	 */
 	private ImageIcon resizeImage(String name, int w, int h) {
 
 		BufferedImage img = null;
@@ -450,15 +505,29 @@ public class MonInterface implements Observer {
 		return new ImageIcon(dimg);
 	}
 	
+	/**
+	 * Retourne le bouton associé aux coordonnées passées en paramètres
+	 * @param x Coordonnée x associée au plateau
+	 * @param y Coordonnée y associée au plateau
+	 * @return JButtonCustom Bouton associé aux coordonées.
+	 */
 	private JButtonCustom findButton(int x, int y) {
 		ArrayList <JButtonCustom> optionalVariable = this.grille.stream().filter(element -> element.getXGrille() == x && element.getYGrille() == y).collect(Collectors.toCollection(ArrayList::new));
 		return optionalVariable.get(0);
 	}
 	
+	/**
+	 * Active ou Désactive tous les boutons qui font référence au plateau
+	 * @param state Si Vrai active les boutons sinon les désactive
+	 */
 	private void setGrilleEnabled(boolean state) {
 		this.grille.forEach(btn -> btn.setEnabled(state));
 	}
 	
+	/**
+	 * Retourne si le joueur courant est un joueur virtuel
+	 * @return boolean Vrai si le joueur est virtuel, faux sinon. 
+	 */
 	private boolean isJoueurVirtuel() {
 		return partie.getJoueurs().get(partie.getRound() % partie.getJoueurs().size()) instanceof JoueurVirtuel;
 	}
@@ -466,6 +535,9 @@ public class MonInterface implements Observer {
 		return (JoueurVirtuel) partie.getJoueurs().get(partie.getRound() % partie.getJoueurs().size());
 	}
 	
+	/**
+	 * Rétabli les images sur les boutons correspondant à une carte posée
+	 */
 	private void retablirGrille() {
 		for(Map.Entry<Integer, Map<Integer, Carte>> entry: partie.getPlateau().getCartesPosees().entrySet() ) {
 			for(Map.Entry<Integer, Carte> entry2: entry.getValue().entrySet()) {
@@ -475,8 +547,10 @@ public class MonInterface implements Observer {
 		}
 	}
 	
+	/**
+	 * Crée la fenêtre de demande de sauvegarde de partie
+	 */
 	private void initializeSauvegardeDialog() {
-		//Création du JDialog de Sauvegarde
 				dialog = new JDialog();
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setBounds(100, 100, 450, 300);

@@ -8,45 +8,28 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- *Classe qui represente le plateau dans le jeu SHapeUp
+ * Représente le plateau du Shape Up
  * @author Corentin
  * @author Pierre
  **/
 public class Plateau implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	/**
-	 * Longueur du plateau
-	 */
-	private int x;
-	/**
-	 * Hauteur du plateau
-	 */
-	private int y;
-	/**
-	 * Carte posée sur le plateau 
-	 */
+
 	private Map<Integer, Map<Integer, Carte>> cartesPosees;
 	/**
-	 * Constructeur
-	 * Créer  la Map 
+	 * Instancie les cartesPosees.   
 	 */
 	
 	public Plateau() {
-		this.x = 5;
-		this.y = 3;
 		this.cartesPosees = new TreeMap<Integer, Map<Integer, Carte>>();
 	}
-	/**
-	 * GetterCartePosé
-	 * @return  Map<Integer, Map<Integer, Carte>>
-	 */
 	public Map<Integer, Map<Integer, Carte>> getCartesPosees(){
 		return this.cartesPosees;
 	}
 	/**
-	 *Compte le nombre de carte posés sur le plateau
-	 * @return  int
+	 * Calcule le nombre de cartes posées sur le plateau
+	 * @return int Nombre de cartes actuellement posées
 	 */
 	
 	public int getNbCartesPosees() {
@@ -60,20 +43,20 @@ public class Plateau implements Serializable {
 	}
 	
 	/**
-	 *Return true quand le plateau est complet 
-	 * @return  boolean
+	 * Indique si le plateau est complet ou non
+	 * @return boolean Vrai si le plateau est complet, faux sinon
+	 * @see fr.corentinPierre.models.Plateau#getNbCartesPosees()
 	 */
 	public boolean isFull() {
 		return this.getNbCartesPosees() == 15;
 	}
 	
 	/**
-	 *Méthode vérifiant si la règle d'adjacense est vérifié (Une carte ne peut etre posée s'il n'y a pas une autre carte a coté d'elle)
-	 *@param int
-	 *@param int 
-	 *@return boolean
+	 * Vérifie si la règle d'adjacence pour un emplacement donné est respectée (voir règles du jeu)
+	 * @param x Coordonnée x de l'emplacement
+	 * @param y Coordonnée y de l'emplacement
+	 * @return boolean Vrai si l'emplacement respecte la règle d'adjacence, faux sinon
 	 */
-	
 	public boolean checkAdjacence(int x, int y) {
 		if(this.cartesPosees.containsKey(y+1)) {
 			if(this.cartesPosees.get(y+1).containsKey(x)) {
@@ -98,10 +81,10 @@ public class Plateau implements Serializable {
 	}
 	
 	/**
-	 *Méthode vérifiant si la règle de base est vérifier ( Carte posée dans les limites du plateau ) 
-	 *@param int
-	 *@param int 
-	 *@return boolean
+	 * Vérifie si la règle de base est respectée pour un emplacement donné ( Carte posée dans les limites du plateau ) 
+	 *@param x Coordonnée x de l'emplacement
+	 *@param y Coordonnée y de l'emplacement
+	 *@return boolean Vrai si la règle est respectée, faux sinon
 	 */
 	public boolean checkBaseRule(int x, int y) {
 		int nbYMax = this.cartesPosees.size();
@@ -216,10 +199,10 @@ public class Plateau implements Serializable {
 		return false;
 	}
 	/**
-	 *Méthode ajoutant une carte posée a la Map,
-	 *@param int x coordoner x de la carte 
-	 *@param int y coordoner y de la carte 
-	 *@param Carte Carteposee
+	 * Pose une carte sur le plateau
+	 *@param x Coordonnée x de la carte
+	 *@param y Coordonnée y de la carte
+	 *@param carte Carte à poser sur le plateau
 	 */
 	public void setCartesPosees(int x, int y, Carte carte) {
 		if(this.cartesPosees.containsKey(y)) {

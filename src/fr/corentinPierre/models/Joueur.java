@@ -4,9 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- *Classe qui represente un joueur dans le jeu SHapeUp
+ * Représente un joueur abstrait dans le jeu Shape Up
  * @author Corentin
  * @author Pierre
+ * 
  **/
 
 public abstract class Joueur implements Serializable{
@@ -32,16 +33,13 @@ public abstract class Joueur implements Serializable{
 	protected Carte carteVictoire;
 	
 	/**
-	 * Carte dans la main du joueur
+	 * Main du joueur
 	 */
 	protected ArrayList<Carte> main;
 	
 	
 	/**
-	 * Constructeur
-	 * @param id
-	 * @param  nom
-	 * Met le score du joueur a 0
+	 * Défini une valeur par défaut du score à 0.
 	 */
 	
 	public Joueur(int id, String nom) {
@@ -49,47 +47,32 @@ public abstract class Joueur implements Serializable{
 		this.nom = nom;
 		this.score = 0;
 	}
-	/**
-	 * Getter du nom du joueur
-	 * @return String
-	 */
+	
 	public String getNom() {
 		return this.nom;
 	}	
-	/**
-	 * Setter de la carte victoire du joueur
-	 * @param Carte
-	 */
+
 	public void setCarteVictoire(Carte c) {
 		this.carteVictoire = c;
 	}
 	
-	/**
-	 * Getter de la carte victoire  du joueur
-	 * @return Carte
-	 */
+
 	public Carte getCarteVictoire() {
 		return this.carteVictoire;
 	}
 	
-	/**
-	 * Getter du score du joueur
-	 * @return int
-	 */
+
 	public int getScore() {
 		return this.score;
 	}
-	/**
-	 * Setter du score du joueur
-	 * @param int
-	 */
+
 	
 	public void setScore(int score) {
 		this.score = score;
 	}
 	
 	/**
-	 * Méthode toString permettant l'affichage des attributs d'un joueur
+	 * Méthode toString permettant l'affichage d'un joueur
 	 * @return String
 	 */
 	
@@ -100,19 +83,18 @@ public abstract class Joueur implements Serializable{
 		bf.append("\nPoints: " + this.score);
 		return bf.toString();
 	}
-	/**
-	 *Création de la main du joueur
-	 */
 	
+	/**
+	 * Création de la main du joueur
+	 */
 	public void createMain() {
 		this.main = new ArrayList<Carte>();
 	}
 	
 	/**
-	 *Ajout d'une carte du plateau dans la main du joueur
-	 *La taille de la main ne peut exceder trois 
-	 *on controle donc sa taille et les emplacement vide 
-	 *@param Carte
+	 * Ajout d'une carte du plateau dans la main du joueur
+	 * <br>On ajoute la carte si et seulement si la taille de la main du joueur n'excède pas trois
+	 * @param c Carte piochée à ajouter dans la main
 	 */
 	public void addCarteToMain(Carte c) {
 		if(this.main.size() < 3) {
@@ -129,30 +111,26 @@ public abstract class Joueur implements Serializable{
 			}
 		}
 	/**
-	 *Enlevement d'une carte de la main par Carte
-	 *@param Carte
-	 *@return boolean
+	 * Supprime la carte sélectionnée de la main du joueur
+	 * @param c Carte de la main à retirer
+	 * @return boolean Vrai si la carte a bien été supprimée, faux sinon
 	 */
 	public boolean removeCarteFromMainBool(Carte c) {
 		return this.main.remove(c);
 	}
 	/**
-	 *Enlevement d'une carte de la main par Index
-	 *@param int
-	 *@return Carte
+	 * Supprime la carte sélectionnée de la main du joueur
+	 * @param c Id de la carte de la main à retirer
+	 * @return boolean Vrai si la carte a bien été supprimée, faux sinon
 	 */
 	public Carte removeCarteFromMainByIndex(int c) {
 		return this.main.remove(c);
 	}
-	/**
-	 *Getter de la main du joueur
-	 *@return ArrayList
-	 */
 	public ArrayList<Carte> getMain(){
 		return this.main;
 	}
 	/**
-	 *Affichage de la main du joueur
+	 * (Vue Console) Affiche la main du joueur
 	 */
 	public void afficherMain() {
 		for(int i = 0; i < this.getMain().size(); i++) {
