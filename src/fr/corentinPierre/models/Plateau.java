@@ -7,23 +7,47 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
-
+/**
+ *Classe qui represente le plateau dans le jeu SHapeUp
+ * @author Corentin
+ * @author Pierre
+ **/
 public class Plateau implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Longueur du plateau
+	 */
 	private int x;
+	/**
+	 * Hauteur du plateau
+	 */
 	private int y;
+	/**
+	 * Carte posée sur le plateau 
+	 */
 	private Map<Integer, Map<Integer, Carte>> cartesPosees;
+	/**
+	 * Constructeur
+	 * Créer  la Map 
+	 */
 	
 	public Plateau() {
 		this.x = 5;
 		this.y = 3;
 		this.cartesPosees = new TreeMap<Integer, Map<Integer, Carte>>();
 	}
-	
+	/**
+	 * GetterCartePosé
+	 * @return  Map<Integer, Map<Integer, Carte>>
+	 */
 	public Map<Integer, Map<Integer, Carte>> getCartesPosees(){
 		return this.cartesPosees;
 	}
+	/**
+	 *Compte le nombre de carte posés sur le plateau
+	 * @return  int
+	 */
 	
 	public int getNbCartesPosees() {
 		int count = 0;
@@ -35,9 +59,20 @@ public class Plateau implements Serializable {
 		return count;
 	}
 	
+	/**
+	 *Return true quand le plateau est complet 
+	 * @return  boolean
+	 */
 	public boolean isFull() {
 		return this.getNbCartesPosees() == 15;
 	}
+	
+	/**
+	 *Méthode vérifiant si la règle d'adjacense est vérifié (Une carte ne peut etre posée s'il n'y a pas une autre carte a coté d'elle)
+	 *@param int
+	 *@param int 
+	 *@return boolean
+	 */
 	
 	public boolean checkAdjacence(int x, int y) {
 		if(this.cartesPosees.containsKey(y+1)) {
@@ -61,6 +96,13 @@ public class Plateau implements Serializable {
 		}
 		return false;
 	}
+	
+	/**
+	 *Méthode vérifiant si la règle de base est vérifier ( Carte posée dans les limites du plateau ) 
+	 *@param int
+	 *@param int 
+	 *@return boolean
+	 */
 	public boolean checkBaseRule(int x, int y) {
 		int nbYMax = this.cartesPosees.size();
 		ArrayList<Integer> xMaxRange = new ArrayList<>();
@@ -173,7 +215,12 @@ public class Plateau implements Serializable {
 		}
 		return false;
 	}
-	
+	/**
+	 *Méthode ajoutant une carte posée a la Map,
+	 *@param int x coordoner x de la carte 
+	 *@param int y coordoner y de la carte 
+	 *@param Carte Carteposee
+	 */
 	public void setCartesPosees(int x, int y, Carte carte) {
 		if(this.cartesPosees.containsKey(y)) {
 			this.cartesPosees.get(y).put(x, carte);

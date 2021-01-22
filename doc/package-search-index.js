@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"fr.corentinPierre.controllers"},{"l":"fr.corentinPierre.enums"},{"l":"fr.corentinPierre.models"},{"l":"fr.corentinPierre.views"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"fr.corentinPierre.models"}]

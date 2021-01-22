@@ -3,8 +3,19 @@ package fr.corentinPierre.models;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class ScoreVisitor implements Visitor{
+/**
+ *Classe qui permet de calculer les scores des différents joueur
+ * @author Corentin
+ * @author Pierre
+ **/
 
+public class ScoreVisitor implements Visitor{
+	/**
+	 * Recupère le score du joueur et les return 
+	 * @param Partie
+	 * @param int
+	 * return int 
+	 */
 	@Override
 	public int visit(Partie p, int id) {
 		int scoreForme = this.calculerForme(p, p.getJoueurs().get(id).getCarteVictoire());
@@ -12,6 +23,13 @@ public class ScoreVisitor implements Visitor{
 		int scoreFillable = this.calculerFillable(p, p.getJoueurs().get(id).getCarteVictoire());
 		return scoreForme + scoreCouleur + scoreFillable;
 	}
+	
+	/**
+	 * Determine le nombre de points obtenu par le joueur en fonction de si sa carte victoire est pleine ou vide
+	 * @param Partie
+	 * @param Carte
+	 * return int 
+	 */
 	
 	public int calculerFillable(Partie p, Carte victoire) {
 		int score = 0;
@@ -89,7 +107,12 @@ public class ScoreVisitor implements Visitor{
 		}
 		return score;
 	}
-	
+	/**
+	 * Determine le nombre de points obtenu par le joueur en fonction de la couleur de sa carte victoire
+	 * @param Partie
+	 * @param Carte
+	 * return int 
+	 */
 	public int calculerCouleur(Partie p, Carte victoire) {
 		int score = 0;
 		Map<Integer, Map<Integer, Carte>> cartes = new TreeMap<Integer, Map<Integer, Carte>>(p.getPlateau().getCartesPosees());	
@@ -166,6 +189,12 @@ public class ScoreVisitor implements Visitor{
 		}
 		return score;
 	}
+	/**
+	 * Determine le nombre de points obtenu par le joueur en fonction de la forme de sa carte victoire
+	 * @param Partie
+	 * @param Carte
+	 * return int 
+	 */
 	public int calculerForme(Partie p, Carte victoire) {
 		int score = 0;
 		Map<Integer, Map<Integer, Carte>> cartes = new TreeMap<Integer, Map<Integer, Carte>>(p.getPlateau().getCartesPosees());	

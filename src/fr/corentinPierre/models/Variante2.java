@@ -1,20 +1,42 @@
 package fr.corentinPierre.models;
+/**
+ *Classe qui represente la Variante2  du jeu de SHapeUp
+ * @author Corentin
+ * @author Pierre
+ **/
+
 
 public class Variante2 extends Variante {
 
+	
 	private static final long serialVersionUID = 1L;
+	/**
+	 * Attribut contenant la carte qui sera poser 
+	 */
 	private Carte carteAPoser;
+	
+	/**
+	 * Constructeur
+	 * @param String
+	 * @param Partie
+	 */
 	public Variante2(String nom, Partie p) {
 		super(nom, p);
 	}
-
+	/**
+	 *Initilisatiion de la partie,
+	 *mélange des cartes,retrait de la carte Cachée
+	 *attribution des carte de la main
+	 */
 	@Override
 	public void initialisation() {
 		this.partie.melangerCartes();
 		this.partie.retirerCarteCachee();
 		this.attribuerMain();
 	}
-	
+	/**
+	 * Méthode attribuant les cartes que chaque joueur aura en main 
+	 */
 	public void attribuerMain() {
 		this.getPartie().getJoueurs().forEach(joueur -> {
 			joueur.createMain();
@@ -23,11 +45,18 @@ public class Variante2 extends Variante {
 			}
 		});
 	}
+	/**
+	 * Setter de la carte a poser
+	 * @param Carte
+	 */
 	
 	public void setCarteAPoser(Carte c) {
 		this.carteAPoser = c;
 	}
-	
+	/**
+	 * Getter de la carte a poser
+	 * @return  Carte
+	 */
 	public Carte getCarteAPoser() {
 		return this.carteAPoser;
 	}
@@ -41,6 +70,11 @@ public class Variante2 extends Variante {
 		v.initialisation();
 	}
 
+	/**
+	 *Une carte est piocher et enlever du deck 
+	 *elle est ensuite ajouter a la main du joueur 
+	 *@return Carte
+	 */
 	@Override
 	public Carte piocher() {
 		Carte c = this.partie.deck.removeFirst();
